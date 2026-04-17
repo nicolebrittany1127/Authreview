@@ -9,7 +9,7 @@ export default async function handler(req, res) {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) return res.status(500).json({ error: 'API key not configured' });
 
-  const { system, messages, max_tokens = 1000, pdf_base64 } = req.body;
+  const { system, messages, max_tokens = 4000, pdf_base64 } = req.body;
 
   let finalMessages = messages;
   if (pdf_base64) {
@@ -33,7 +33,7 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-5',
-        max_tokens,
+        max_tokens: 4000,
         system,
         messages: finalMessages,
       }),
