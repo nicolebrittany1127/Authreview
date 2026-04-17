@@ -11,11 +11,6 @@ export default async function handler(req, res) {
 
   const { system, messages, pdf_base64 } = req.body;
 
-  // Check PDF size — Vercel has a 4.5MB body limit
-  if (pdf_base64 && pdf_base64.length > 4000000) {
-    return res.status(413).json({ error: 'PDF is too large. Please upload a file under 3MB or paste the text instead.' });
-  }
-
   let finalMessages = messages;
   if (pdf_base64) {
     finalMessages = [{
