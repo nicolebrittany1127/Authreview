@@ -375,22 +375,22 @@ input[type="file"]{display:none}
 
 <script>
 const PAYERS={
-  sunshine:{name:'Sunshine Health (FL Medicaid)',fw:'ASAM Criteria (SUD) / InterQual (MH)',sud_fw:'ASAM Criteria',mh_fw:'InterQual',notes:'PHP is an In Lieu of Service. ASAM 2.5 for primary SUD; InterQual for primary MH. Extended stay fax form required.',parity_note:'Sunshine Health uses ASAM for SUD and InterQual for MH. Primary diagnosis determines which framework applies. Dual diagnosis cases require both frameworks to be addressed.'},
-  aetna_med:{name:'Aetna Better Health FL',fw:'ASAM Criteria / MCG',sud_fw:'ASAM Criteria',mh_fw:'MCG (Milliman)',notes:'ASAM for SUD, MCG for MH. Bio-psychosocial assessment required.',parity_note:'Aetna applies ASAM for SUD and MCG for MH. Dual diagnosis documentation should address both frameworks.'},
-  molina:{name:'Molina Healthcare FL',fw:'ASAM / InterQual',sud_fw:'ASAM Criteria',mh_fw:'InterQual',notes:'AHCA-aligned. ASAM for SUD, InterQual for MH.',parity_note:'Primary diagnosis drives which framework is applied for authorization review.'},
-  simply:{name:'Simply Healthcare FL',fw:'ASAM Criteria',sud_fw:'ASAM Criteria',mh_fw:'ASAM / DCF Guidelines',notes:'DCF-aligned. Strong emphasis on Dimensions 5 and 6.',parity_note:'Simply Healthcare primarily uses ASAM criteria. MH cases may also reference DCF behavioral health guidelines.'},
-  humana_med:{name:'Humana Medicaid FL',fw:'ASAM / InterQual',sud_fw:'ASAM Criteria',mh_fw:'InterQual',notes:'Comprehensive bio-psychosocial assessment required.',parity_note:'Humana uses ASAM for SUD and InterQual for MH. PHP for MH requires acute psychiatric symptom severity under InterQual.'},
-  united_med:{name:'UHC Community Plan FL',fw:'Optum / ASAM 4th Ed.',sud_fw:'ASAM 4th Edition',mh_fw:'Optum / InterQual',notes:'Optum manages BH. ASAM 4th edition.',parity_note:'UHC/Optum uses ASAM 4th edition for SUD and Optum guidelines for MH. Co-occurring disorders require documentation supporting both.'},
-  bcbs:{name:'BCBS Florida / Florida Blue',fw:'MCG Guidelines',sud_fw:'MCG (SUD)',mh_fw:'MCG (Psychiatric)',notes:'Uses MCG guidelines for both SUD and MH.',parity_note:'BCBS applies MCG guidelines for both but uses different MCG criteria sets. Acute clinical need must be documented under the appropriate MCG chapter.'},
-  cigna:{name:'Cigna Behavioral Health',fw:'ASAM Criteria',sud_fw:'ASAM Criteria',mh_fw:'Cigna Coverage Policy',notes:'Dimension 3 and 5 weighted heavily.',parity_note:'Cigna uses ASAM for SUD and internal coverage policies for MH. MH PHP requires acute psychiatric need and failure of lower LOC.'},
-  aetna_comm:{name:'Aetna (Commercial)',fw:'ASAM / MCG',sud_fw:'ASAM Criteria',mh_fw:'MCG (Milliman)',notes:'ASAM for SUD, MCG for MH.',parity_note:'Federal Mental Health Parity Act applies — MH/SUD benefits cannot be more restrictive than medical/surgical benefits.'},
-  uhc_comm:{name:'UnitedHealthcare (Commercial)',fw:'Optum / ASAM 4th Ed.',sud_fw:'ASAM 4th Edition',mh_fw:'Optum Behavioral Health Guidelines',notes:'Person-centered documentation required.',parity_note:'Federal Mental Health Parity Act applies. Document MH severity with same rigor as medical conditions.'},
-  humana_comm:{name:'Humana (Commercial)',fw:'ASAM / InterQual',sud_fw:'ASAM Criteria',mh_fw:'InterQual Behavioral Health',notes:'Psychiatric evaluation and medication management required.',parity_note:'Humana applies ASAM for SUD and InterQual BH for MH. Both require documented failure of lower LOC.'},
-  magellan:{name:'Magellan Health',fw:'ASAM Criteria',sud_fw:'ASAM Criteria',mh_fw:'Magellan Clinical Guidelines',notes:'Measurable goals and demonstrated progress required.',parity_note:'Magellan uses ASAM for SUD and internal clinical guidelines for MH. Weekly treatment plan reviews required for both.'},
-  carelon:{name:'Carelon / Beacon',fw:'ASAM 4th Ed.',sud_fw:'ASAM 4th Edition',mh_fw:'InterQual / Carelon BH Guidelines',notes:'Bio-psychosocial assessment within 24hrs required.',parity_note:'Carelon uses ASAM 4th edition for SUD. MH cases use InterQual or Carelon BH-specific guidelines.'},
-  tricare:{name:'TRICARE',fw:'ASAM / VA-DoD CPG',sud_fw:'ASAM / VA-DoD CPG',mh_fw:'VA-DoD CPG',notes:'20+ hrs/week of structured programming required.',parity_note:'VA/DoD Clinical Practice Guidelines apply to both MH and SUD. 20+ hours/week required for PHP under both.'},
-  medicare:{name:'Traditional Medicare',fw:'CMS / InterQual',sud_fw:'CMS / InterQual',mh_fw:'CMS / InterQual',notes:'Physician certification required. 20+ hrs/week therapy.',parity_note:'Medicare uses InterQual for both MH and SUD PHP. Mental Health Parity and Addiction Equity Act mandates equal coverage.'},
-  medicare_adv:{name:'Medicare Advantage',fw:'CMS baseline + plan-specific',sud_fw:'ASAM / CMS',mh_fw:'InterQual / CMS',notes:'Must meet CMS minimum criteria.',parity_note:'MA plans must meet CMS minimum parity requirements. Individual plans may use ASAM for SUD and InterQual for MH.'}
+  sunshine:{name:'Sunshine Health (FL Medicaid)',fw:'ASAM Criteria (SUD) / InterQual (MH)',sud_fw:'ASAM Criteria',mh_fw:'InterQual',notes:'PHP is an In Lieu of Service. ASAM 2.5 for primary SUD; InterQual for primary MH. Extended stay fax form required.',parity_note:'Sunshine Health uses ASAM for SUD and InterQual for MH. Primary diagnosis determines which framework applies.'},
+  aetna_med:{name:'Aetna Better Health FL',fw:'ASAM Criteria / MCG',sud_fw:'ASAM Criteria',mh_fw:'MCG (Milliman)',notes:'ASAM for SUD, MCG for MH. Bio-psychosocial assessment required.',parity_note:'Aetna applies ASAM for SUD and MCG for MH.'},
+  molina:{name:'Molina Healthcare FL',fw:'ASAM / InterQual',sud_fw:'ASAM Criteria',mh_fw:'InterQual',notes:'AHCA-aligned. ASAM for SUD, InterQual for MH.',parity_note:'Primary diagnosis drives which framework is applied.'},
+  simply:{name:'Simply Healthcare FL',fw:'ASAM Criteria',sud_fw:'ASAM Criteria',mh_fw:'ASAM / DCF Guidelines',notes:'DCF-aligned. Strong emphasis on Dimensions 5 and 6.',parity_note:'Simply Healthcare primarily uses ASAM criteria.'},
+  humana_med:{name:'Humana Medicaid FL',fw:'ASAM / InterQual',sud_fw:'ASAM Criteria',mh_fw:'InterQual',notes:'Comprehensive bio-psychosocial assessment required.',parity_note:'Humana uses ASAM for SUD and InterQual for MH.'},
+  united_med:{name:'UHC Community Plan FL',fw:'Optum / ASAM 4th Ed.',sud_fw:'ASAM 4th Edition',mh_fw:'Optum / InterQual',notes:'Optum manages BH. ASAM 4th edition.',parity_note:'UHC/Optum uses ASAM 4th edition for SUD and Optum guidelines for MH.'},
+  bcbs:{name:'BCBS Florida / Florida Blue',fw:'MCG Guidelines',sud_fw:'MCG (SUD)',mh_fw:'MCG (Psychiatric)',notes:'Uses MCG guidelines for both SUD and MH.',parity_note:'BCBS applies MCG guidelines for both but uses different MCG criteria sets.'},
+  cigna:{name:'Cigna Behavioral Health',fw:'ASAM Criteria',sud_fw:'ASAM Criteria',mh_fw:'Cigna Coverage Policy',notes:'Dimension 3 and 5 weighted heavily.',parity_note:'Cigna uses ASAM for SUD and internal coverage policies for MH.'},
+  aetna_comm:{name:'Aetna (Commercial)',fw:'ASAM / MCG',sud_fw:'ASAM Criteria',mh_fw:'MCG (Milliman)',notes:'ASAM for SUD, MCG for MH.',parity_note:'Federal Mental Health Parity Act applies.'},
+  uhc_comm:{name:'UnitedHealthcare (Commercial)',fw:'Optum / ASAM 4th Ed.',sud_fw:'ASAM 4th Edition',mh_fw:'Optum Behavioral Health Guidelines',notes:'Person-centered documentation required.',parity_note:'Federal Mental Health Parity Act applies.'},
+  humana_comm:{name:'Humana (Commercial)',fw:'ASAM / InterQual',sud_fw:'ASAM Criteria',mh_fw:'InterQual Behavioral Health',notes:'Psychiatric evaluation and medication management required.',parity_note:'Humana applies ASAM for SUD and InterQual BH for MH.'},
+  magellan:{name:'Magellan Health',fw:'ASAM Criteria',sud_fw:'ASAM Criteria',mh_fw:'Magellan Clinical Guidelines',notes:'Measurable goals and demonstrated progress required.',parity_note:'Magellan uses ASAM for SUD and internal clinical guidelines for MH.'},
+  carelon:{name:'Carelon / Beacon',fw:'ASAM 4th Ed.',sud_fw:'ASAM 4th Edition',mh_fw:'InterQual / Carelon BH Guidelines',notes:'Bio-psychosocial assessment within 24hrs required.',parity_note:'Carelon uses ASAM 4th edition for SUD.'},
+  tricare:{name:'TRICARE',fw:'ASAM / VA-DoD CPG',sud_fw:'ASAM / VA-DoD CPG',mh_fw:'VA-DoD CPG',notes:'20+ hrs/week of structured programming required.',parity_note:'VA/DoD Clinical Practice Guidelines apply to both MH and SUD.'},
+  medicare:{name:'Traditional Medicare',fw:'CMS / InterQual',sud_fw:'CMS / InterQual',mh_fw:'CMS / InterQual',notes:'Physician certification required. 20+ hrs/week therapy.',parity_note:'Medicare uses InterQual for both MH and SUD PHP.'},
+  medicare_adv:{name:'Medicare Advantage',fw:'CMS baseline + plan-specific',sud_fw:'ASAM / CMS',mh_fw:'InterQual / CMS',notes:'Must meet CMS minimum criteria.',parity_note:'MA plans must meet CMS minimum parity requirements.'}
 };
 const LOCS={
   detox_med:{label:'Medical Detox',asam:'ASAM 4-WM',dims:['Severe withdrawal requiring 24hr medical management','Significant medical complications (cardiac, hepatic, seizure risk)','Psychiatric stability sufficient for medically supervised detox','Willing to engage in medically supervised detox','High risk of life-threatening complications without hospital-level monitoring','Environment unsafe or patient unable to self-monitor']},
@@ -421,20 +421,47 @@ function sp2(el){document.querySelectorAll('#concPayerWrap .ptag').forEach(t=>t.
 function sl2(el){document.querySelectorAll('#concLocWrap .ltag').forEach(t=>t.classList.remove('sel'));el.classList.add('sel');selL2=el.dataset.l2}
 function spm(el){document.querySelectorAll('#mode-mhsud .ptag').forEach(t=>t.classList.remove('sel'));el.classList.add('sel');selPM=el.dataset.pm}
 
-function handleFile(inputId,textId,pdfKey){
-  document.getElementById(inputId).addEventListener('change',function(e){
-    const f=e.target.files[0];if(!f)return;
-    if(f.type==='text/plain'){const r=new FileReader();r.onload=ev=>{document.getElementById(textId).value=ev.target.result};r.readAsText(f)}
-  else if(f.type==='application/pdf'){
-  if(f.size > 4000000){
-    alert('PDF is too large. Please upload a file under 3MB or paste the text directly.');
-    return;
-  }{const r=new FileReader();r.onload=ev=>{window[pdfKey]=ev.target.result.split(',')[1];document.getElementById(textId).value='[PDF loaded: '+f.name+']';document.getElementById(textId).style.color='var(--ink3)'};r.readAsDataURL(f)}
+function setupFileInput(inputId, textId, pdfKey) {
+  const input = document.getElementById(inputId);
+  if (!input) return;
+  input.addEventListener('change', function(e) {
+    const f = e.target.files[0];
+    if (!f) return;
+    if (f.type === 'text/plain') {
+      const r = new FileReader();
+      r.onload = function(ev) {
+        document.getElementById(textId).value = ev.target.result;
+        document.getElementById(textId).style.color = 'var(--ink)';
+        if (textId === 'singleDoc') document.getElementById('sCC').textContent = ev.target.result.length.toLocaleString() + ' chars';
+      };
+      r.readAsText(f);
+    } else if (f.type === 'application/pdf') {
+      const r = new FileReader();
+      r.onload = function(ev) {
+        window[pdfKey] = ev.target.result.split(',')[1];
+        document.getElementById(textId).value = '[PDF loaded: ' + f.name + ']';
+        document.getElementById(textId).style.color = 'var(--ink3)';
+      };
+      r.readAsDataURL(f);
+    } else {
+      alert('Please upload a .txt or .pdf file only.');
+    }
   });
 }
-handleFile('fileS','singleDoc','_pdfS');
-handleFile('fileMH','mhsudDoc','_pdfMH');
-document.getElementById('singleDoc').addEventListener('input',()=>{document.getElementById('sCC').textContent=document.getElementById('singleDoc').value.length.toLocaleString()+' chars'});
+
+window.addEventListener('DOMContentLoaded', function() {
+  setupFileInput('fileS', 'singleDoc', '_pdfS');
+  setupFileInput('fileMH', 'mhsudDoc', '_pdfMH');
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+  const singleDoc = document.getElementById('singleDoc');
+  if (singleDoc) {
+    singleDoc.addEventListener('input', function() {
+      document.getElementById('sCC').textContent = this.value.length.toLocaleString() + ' chars';
+    });
+  }
+});
 
 function loadSample(mode){
   if(mode==='single'){document.getElementById('singleDoc').value=SAMPLE1;document.getElementById('sCC').textContent=SAMPLE1.length+' chars'}
@@ -451,40 +478,33 @@ function loadSample(mode){
 function addSlot(label='',prefill=''){
   if(bSlotCount>=8)return;bSlotCount++;const i=bSlotCount;
   const div=document.createElement('div');div.id='bs-'+i;div.className='batch-slot';
-  div.innerHTML=`<div class="batch-slot-hdr"><input type="text" id="bl-${i}" value="${label||'Patient '+i}" style="flex:1" /><button class="btn btn-ghost btn-sm" onclick="document.getElementById('bs-${i}').remove()">Remove</button></div><textarea id="bd-${i}" style="min-height:90px;font-size:12px">${prefill}</textarea>`;
+  div.innerHTML='<div class="batch-slot-hdr"><input type="text" id="bl-'+i+'" value="'+(label||'Patient '+i)+'" style="flex:1" /><button class="btn btn-ghost btn-sm" onclick="document.getElementById(\'bs-'+i+'\').remove()">Remove</button></div><textarea id="bd-'+i+'" style="min-height:90px;font-size:12px">'+prefill+'</textarea>';
   document.getElementById('batchSlots').appendChild(div);
 }
 
 const LMSGS=['Parsing clinical documentation...','Mapping ASAM dimensional criteria...','Applying payer-specific requirements...','Evaluating authorization readiness...','Generating gap analysis...'];
-function startLoad(id){let i=0;const el=document.getElementById(id);if(!el)return null;el.textContent=LMSGS[0];return setInterval(()=>{i=(i+1)%LMSGS.length;if(el)el.textContent=LMSGS[i]},2200)}
+function startLoad(id){let i=0;const el=document.getElementById(id);if(!el)return null;el.textContent=LMSGS[0];return setInterval(function(){i=(i+1)%LMSGS.length;if(el)el.textContent=LMSGS[i]},2200)}
 function showLoader(id,show){const el=document.getElementById(id);if(el)el.style.display=show?'block':'none'}
 
-function buildSys(pKey,lKey,extra=''){
+function buildSys(pKey,lKey,extra){
+  extra=extra||'';
   const p=PAYERS[pKey]||PAYERS.sunshine;const l=LOCS[lKey]||LOCS.php;
-  const dims=l.dims.map((d,i)=>`Dimension ${i+1}: ${d}`).join('\n');
-  return `You are a behavioral health utilization review specialist with deep expertise in ASAM criteria and insurance prior authorization requirements.
-PAYER: ${p.name} | FRAMEWORK: ${p.fw} | CONTEXT: ${p.notes}
-REQUESTED LOC: ${l.label} (${l.asam})
-ASAM DIMENSIONS:\n${dims}\n${extra}
-Return ONLY valid JSON (no markdown): {"auth_score":number,"verdict":"likely_approved"|"likely_denied"|"insufficient_documentation"|"needs_supplementation","verdict_label":string,"summary":string,"met_count":number,"partial_count":number,"gap_count":number,"dimensions":[{"id":number,"name":string,"status":"met"|"partial"|"gap","finding":string,"recommendation":string}],"critical_gaps":[string],"payer_specific_issues":[string],"overall_recommendation":string}`;
+  const dims=l.dims.map(function(d,i){return 'Dimension '+(i+1)+': '+d}).join('\n');
+  return 'You are a behavioral health utilization review specialist with deep expertise in ASAM criteria and insurance prior authorization requirements.\nPAYER: '+p.name+' | FRAMEWORK: '+p.fw+' | CONTEXT: '+p.notes+'\nREQUESTED LOC: '+l.label+' ('+l.asam+')\nASAM DIMENSIONS:\n'+dims+'\n'+extra+'\nReturn ONLY valid JSON (no markdown): {"auth_score":number,"verdict":"likely_approved"|"likely_denied"|"insufficient_documentation"|"needs_supplementation","verdict_label":string,"summary":string,"met_count":number,"partial_count":number,"gap_count":number,"dimensions":[{"id":number,"name":string,"status":"met"|"partial"|"gap","finding":string,"recommendation":string}],"critical_gaps":[string],"payer_specific_issues":[string],"overall_recommendation":string}';
 }
 
 function buildMHSUDSys(pKey){
   const p=PAYERS[pKey]||PAYERS.sunshine;
-  return `You are a behavioral health utilization review specialist with expertise in both ASAM criteria (SUD) and InterQual/MCG criteria (Mental Health).
-PAYER: ${p.name} | SUD FRAMEWORK: ${p.sud_fw} | MH FRAMEWORK: ${p.mh_fw} | PARITY CONTEXT: ${p.parity_note}
-Analyze the documentation and determine primary diagnosis type, then evaluate under both SUD and MH frameworks.
-Return ONLY valid JSON (no markdown):
-{"primary_dx_type":"sud"|"mh"|"dual"|"unclear","primary_dx_confidence":"high"|"medium"|"low","primary_dx_rationale":string,"payer_applicable_framework":string,"parity_alert":boolean,"parity_alert_detail":string,"sud_analysis":{"auth_score":number,"recommended_loc":string,"verdict":"likely_approved"|"likely_denied"|"needs_supplementation"|"insufficient_documentation","verdict_label":string,"summary":string,"key_gaps":[string],"key_strengths":[string]},"mh_analysis":{"auth_score":number,"recommended_loc":string,"verdict":"likely_approved"|"likely_denied"|"needs_supplementation"|"insufficient_documentation","verdict_label":string,"summary":string,"key_gaps":[string],"key_strengths":[string]},"dual_diagnosis_note":string,"overall_recommendation":string,"framework_recommendation":string}`;
+  return 'You are a behavioral health utilization review specialist with expertise in both ASAM criteria (SUD) and InterQual/MCG criteria (Mental Health).\nPAYER: '+p.name+' | SUD FRAMEWORK: '+p.sud_fw+' | MH FRAMEWORK: '+p.mh_fw+' | PARITY CONTEXT: '+p.parity_note+'\nAnalyze the documentation and determine primary diagnosis type, then evaluate under both SUD and MH frameworks.\nReturn ONLY valid JSON (no markdown):\n{"primary_dx_type":"sud"|"mh"|"dual"|"unclear","primary_dx_confidence":"high"|"medium"|"low","primary_dx_rationale":string,"payer_applicable_framework":string,"parity_alert":boolean,"parity_alert_detail":string,"sud_analysis":{"auth_score":number,"recommended_loc":string,"verdict":"likely_approved"|"likely_denied"|"needs_supplementation"|"insufficient_documentation","verdict_label":string,"summary":string,"key_gaps":[string],"key_strengths":[string]},"mh_analysis":{"auth_score":number,"recommended_loc":string,"verdict":"likely_approved"|"likely_denied"|"needs_supplementation"|"insufficient_documentation","verdict_label":string,"summary":string,"key_gaps":[string],"key_strengths":[string]},"dual_diagnosis_note":string,"overall_recommendation":string,"framework_recommendation":string}';
 }
 
-async function callAPI(system,content,pdfBase64=null){
-  const body={system,messages:[{role:'user',content}],max_tokens:1000};
+async function callAPI(system,content,pdfBase64){
+  const body={system:system,messages:[{role:'user',content:content}],max_tokens:4000};
   if(pdfBase64)body.pdf_base64=pdfBase64;
   const resp=await fetch('/api/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
-  if(!resp.ok){const e=await resp.json().catch(()=>({}));throw new Error(e.error||'API error '+resp.status)}
+  if(!resp.ok){const e=await resp.json().catch(function(){return{}});throw new Error(e.error||'API error '+resp.status)}
   const data=await resp.json();
-  const txt=data.content.map(i=>i.text||'').join('');
+  const txt=data.content.map(function(i){return i.text||''}).join('');
   return JSON.parse(txt.replace(/```json|```/g,'').trim());
 }
 
@@ -498,7 +518,7 @@ async function runSingle(){
     const d=await callAPI(buildSys(selP,selL),text,window._pdfS||null);
     window._pdfS=null;clearInterval(t);showLoader('single-loading',false);
     renderSingle(d,selP,selL,text);
-  }catch(e){clearInterval(t);showLoader('single-loading',false);document.getElementById('single-results').innerHTML=`<div class="error-box">Analysis failed: ${e.message}</div>`}
+  }catch(e){clearInterval(t);showLoader('single-loading',false);document.getElementById('single-results').innerHTML='<div class="error-box">Analysis failed: '+e.message+'</div>'}
   document.getElementById('singleBtn').disabled=false;
 }
 
@@ -512,7 +532,7 @@ async function runMHSUD(){
     const d=await callAPI(buildMHSUDSys(selPM),text,window._pdfMH||null);
     window._pdfMH=null;clearInterval(t);showLoader('mhsud-loading',false);
     renderMHSUD(d,selPM);
-  }catch(e){clearInterval(t);showLoader('mhsud-loading',false);document.getElementById('mhsud-results').innerHTML=`<div class="error-box">Analysis failed: ${e.message}</div>`}
+  }catch(e){clearInterval(t);showLoader('mhsud-loading',false);document.getElementById('mhsud-results').innerHTML='<div class="error-box">Analysis failed: '+e.message+'</div>'}
   document.getElementById('mhsudBtn').disabled=false;
 }
 
@@ -523,11 +543,11 @@ async function runConcurrent(){
   document.getElementById('concBtn').disabled=true;
   document.getElementById('conc-results').innerHTML='';
   showLoader('conc-loading',true);const t=startLoad('cLoadMsg');
-  const extra=`Additionally perform a CONCURRENT STAY review. Add "continued_stay_assessment":{"status":"supported"|"step_down_indicated"|"step_up_indicated"|"insufficient_evidence","rationale":string,"trajectory":string}`;
+  const extra='Additionally perform a CONCURRENT STAY review. Add "continued_stay_assessment":{"status":"supported"|"step_down_indicated"|"step_up_indicated"|"insufficient_evidence","rationale":string,"trajectory":string}';
   try{
-    const d=await callAPI(buildSys(selP2,selL2,extra),`INITIAL AUTH NOTE:\n${d1}\n\n---\nCURRENT PROGRESS NOTE:\n${d2}`);
+    const d=await callAPI(buildSys(selP2,selL2,extra),'INITIAL AUTH NOTE:\n'+d1+'\n\n---\nCURRENT PROGRESS NOTE:\n'+d2);
     clearInterval(t);showLoader('conc-loading',false);renderConcurrent(d,selP2,selL2);
-  }catch(e){clearInterval(t);showLoader('conc-loading',false);document.getElementById('conc-results').innerHTML=`<div class="error-box">Analysis failed: ${e.message}</div>`}
+  }catch(e){clearInterval(t);showLoader('conc-loading',false);document.getElementById('conc-results').innerHTML='<div class="error-box">Analysis failed: '+e.message+'</div>'}
   document.getElementById('concBtn').disabled=false;
 }
 
@@ -540,12 +560,12 @@ async function runBatch(){
   document.getElementById('batchBtn').disabled=true;
   document.getElementById('batch-results').innerHTML='';
   showLoader('batch-loading',true);
-  document.getElementById('bLoadMsg').textContent=`Analyzing ${slots.length} document${slots.length>1?'s':''}...`;
+  document.getElementById('bLoadMsg').textContent='Analyzing '+slots.length+' document'+(slots.length>1?'s':'')+'...';
   const results=[];
   for(let i=0;i<slots.length;i++){
-    document.getElementById('bLoadMsg').textContent=`Analyzing ${i+1} of ${slots.length}: ${slots[i].label}`;
-    try{const d=await callAPI(buildSys(pKey,lKey),slots[i].text);results.push({...slots[i],data:d,pKey,lKey})}
-    catch(e){results.push({...slots[i],error:e.message,pKey,lKey})}
+    document.getElementById('bLoadMsg').textContent='Analyzing '+(i+1)+' of '+slots.length+': '+slots[i].label;
+    try{const d=await callAPI(buildSys(pKey,lKey),slots[i].text);results.push(Object.assign({},slots[i],{data:d,pKey:pKey,lKey:lKey}))}
+    catch(e){results.push(Object.assign({},slots[i],{error:e.message,pKey:pKey,lKey:lKey}))}
   }
   showLoader('batch-loading',false);renderBatch(results,pKey,lKey);
   document.getElementById('batchBtn').disabled=false;
@@ -558,7 +578,9 @@ function bc(s){return{met:'b-met',partial:'b-par',gap:'b-gap'}[s]}
 function bl(s){return{met:'Met',partial:'Partial',gap:'Gap'}[s]}
 
 function renderDims(dims,prefix){
-  return dims.map((dim,i)=>`<div class="dim-row"><div class="dim-hdr" onclick="td('${prefix}${i}')"><div class="dot ${dc(dim.status)}"></div><div class="dim-name">Dim.${dim.id} — ${dim.name}</div><span class="badge ${bc(dim.status)}">${bl(dim.status)}</span><span class="chevron" id="cv-${prefix}${i}">▼</span></div><div class="dim-body" id="db-${prefix}${i}"><p>${dim.finding}</p><div class="rec-box"><strong>Add to documentation</strong>${dim.recommendation}</div></div></div>`).join('');
+  return dims.map(function(dim,i){
+    return '<div class="dim-row"><div class="dim-hdr" onclick="td(\''+prefix+i+'\')"><div class="dot '+dc(dim.status)+'"></div><div class="dim-name">Dim.'+dim.id+' — '+dim.name+'</div><span class="badge '+bc(dim.status)+'">'+bl(dim.status)+'</span><span class="chevron" id="cv-'+prefix+i+'">▼</span></div><div class="dim-body" id="db-'+prefix+i+'"><p>'+dim.finding+'</p><div class="rec-box"><strong>Add to documentation</strong>'+dim.recommendation+'</div></div></div>';
+  }).join('');
 }
 function td(id){const b=document.getElementById('db-'+id),c=document.getElementById('cv-'+id);if(b){b.classList.toggle('open');if(c)c.textContent=b.classList.contains('open')?'▲':'▼'}}
 
@@ -566,30 +588,20 @@ function renderMHSUD(d,pKey){
   const p=PAYERS[pKey]||PAYERS.sunshine;
   const dxChip={sud:'dx-sud',mh:'dx-mh',dual:'dx-dual',unclear:'dx-unclear'}[d.primary_dx_type]||'dx-unclear';
   const dxLabel={sud:'Primary SUD',mh:'Primary Mental Health',dual:'Dual Diagnosis',unclear:'Diagnosis Unclear'}[d.primary_dx_type]||'Unclear';
-  const s1=d.sud_analysis.auth_score>=70?'sd-high':d.sud_analysis.auth_score>=40?'sd-mid':'sd-low';
-  const s2=d.mh_analysis.auth_score>=70?'sd-high':d.mh_analysis.auth_score>=40?'sd-mid':'sd-low';
-  let h=`<div class="panel"><div style="text-align:center;padding:.75rem 0 1rem"><span class="dx-chip ${dxChip}">${dxLabel}</span><div style="font-size:12px;color:var(--ink3);font-family:var(--mono);margin-top:4px">${p.name} — MH vs SUD Framework Analysis</div><div style="font-size:11px;color:var(--ink4);margin-top:3px">${d.primary_dx_rationale}</div></div>`;
-  if(d.parity_alert){h+=`<div class="parity-alert"><strong>Parity / Framework Alert</strong>${d.parity_alert_detail}</div>`}
-  h+=`<div style="margin-bottom:1rem"><div class="slabel">Applicable framework</div><div class="payer-info-bar"><strong>${p.name}</strong> will apply: ${d.payer_applicable_framework}<br>${d.framework_recommendation}</div></div>
-  <div class="mhsud-grid">
-    <div class="mhsud-card"><div class="mhsud-card-hdr sud">SUD — ${p.sud_fw}</div><div class="mhsud-card-body">
-      <div class="score-donut ${s1}" style="width:60px;height:60px;font-size:16px;margin-bottom:8px">${Math.round(d.sud_analysis.auth_score)}%</div>
-      <div style="text-align:center;margin-bottom:8px"><span class="verdict-chip ${vc(d.sud_analysis.verdict)}">${d.sud_analysis.verdict_label}</span><div style="font-size:11px;font-family:var(--mono);color:var(--ink3)">${d.sud_analysis.recommended_loc}</div></div>
-      <div style="font-size:12px;color:var(--ink3);line-height:1.6;margin-bottom:8px">${d.sud_analysis.summary}</div>
-      ${d.sud_analysis.key_strengths?.map(g=>`<div class="crit-item"><div class="crit-dot" style="background:#10b981"></div><span class="crit-text">${g}</span></div>`).join('')||''}
-      ${d.sud_analysis.key_gaps?.map(g=>`<div class="crit-item"><div class="crit-dot"></div><span class="crit-text">${g}</span></div>`).join('')||''}
-    </div></div>
-    <div class="mhsud-card"><div class="mhsud-card-hdr mh">MH — ${p.mh_fw}</div><div class="mhsud-card-body">
-      <div class="score-donut ${s2}" style="width:60px;height:60px;font-size:16px;margin-bottom:8px">${Math.round(d.mh_analysis.auth_score)}%</div>
-      <div style="text-align:center;margin-bottom:8px"><span class="verdict-chip ${vc(d.mh_analysis.verdict)}">${d.mh_analysis.verdict_label}</span><div style="font-size:11px;font-family:var(--mono);color:var(--ink3)">${d.mh_analysis.recommended_loc}</div></div>
-      <div style="font-size:12px;color:var(--ink3);line-height:1.6;margin-bottom:8px">${d.mh_analysis.summary}</div>
-      ${d.mh_analysis.key_strengths?.map(g=>`<div class="crit-item"><div class="crit-dot" style="background:#10b981"></div><span class="crit-text">${g}</span></div>`).join('')||''}
-      ${d.mh_analysis.key_gaps?.map(g=>`<div class="crit-item"><div class="crit-dot purple"></div><span class="crit-text">${g}</span></div>`).join('')||''}
-    </div></div>
-  </div>
-  ${d.dual_diagnosis_note?`<div class="slabel">Dual diagnosis considerations</div><div class="sum-box">${d.dual_diagnosis_note}</div>`:''}
-  <div class="slabel">Overall recommendation</div><div class="sum-box"><strong>Next step:</strong> ${d.overall_recommendation}</div>
-  <div class="action-bar"><button class="btn" onclick="doExport('mhsud')">Export PDF report</button></div></div>`;
+  const s1=sc(d.sud_analysis.auth_score);
+  const s2=sc(d.mh_analysis.auth_score);
+  let h='<div class="panel"><div style="text-align:center;padding:.75rem 0 1rem"><span class="dx-chip '+dxChip+'">'+dxLabel+'</span><div style="font-size:12px;color:var(--ink3);font-family:var(--mono);margin-top:4px">'+p.name+' — MH vs SUD Framework Analysis</div><div style="font-size:11px;color:var(--ink4);margin-top:3px">'+d.primary_dx_rationale+'</div></div>';
+  if(d.parity_alert){h+='<div class="parity-alert"><strong>Parity / Framework Alert</strong>'+d.parity_alert_detail+'</div>'}
+  h+='<div style="margin-bottom:1rem"><div class="slabel">Applicable framework</div><div class="payer-info-bar"><strong>'+p.name+'</strong> will apply: '+d.payer_applicable_framework+'<br>'+d.framework_recommendation+'</div></div>';
+  h+='<div class="mhsud-grid"><div class="mhsud-card"><div class="mhsud-card-hdr sud">SUD — '+p.sud_fw+'</div><div class="mhsud-card-body"><div class="score-donut '+s1+'" style="width:60px;height:60px;font-size:16px;margin-bottom:8px">'+Math.round(d.sud_analysis.auth_score)+'%</div><div style="text-align:center;margin-bottom:8px"><span class="verdict-chip '+vc(d.sud_analysis.verdict)+'">'+d.sud_analysis.verdict_label+'</span><div style="font-size:11px;font-family:var(--mono);color:var(--ink3)">'+d.sud_analysis.recommended_loc+'</div></div><div style="font-size:12px;color:var(--ink3);line-height:1.6;margin-bottom:8px">'+d.sud_analysis.summary+'</div>';
+  if(d.sud_analysis.key_strengths)d.sud_analysis.key_strengths.forEach(function(g){h+='<div class="crit-item"><div class="crit-dot" style="background:#10b981"></div><span class="crit-text">'+g+'</span></div>'});
+  if(d.sud_analysis.key_gaps)d.sud_analysis.key_gaps.forEach(function(g){h+='<div class="crit-item"><div class="crit-dot"></div><span class="crit-text">'+g+'</span></div>'});
+  h+='</div></div><div class="mhsud-card"><div class="mhsud-card-hdr mh">MH — '+p.mh_fw+'</div><div class="mhsud-card-body"><div class="score-donut '+s2+'" style="width:60px;height:60px;font-size:16px;margin-bottom:8px">'+Math.round(d.mh_analysis.auth_score)+'%</div><div style="text-align:center;margin-bottom:8px"><span class="verdict-chip '+vc(d.mh_analysis.verdict)+'">'+d.mh_analysis.verdict_label+'</span><div style="font-size:11px;font-family:var(--mono);color:var(--ink3)">'+d.mh_analysis.recommended_loc+'</div></div><div style="font-size:12px;color:var(--ink3);line-height:1.6;margin-bottom:8px">'+d.mh_analysis.summary+'</div>';
+  if(d.mh_analysis.key_strengths)d.mh_analysis.key_strengths.forEach(function(g){h+='<div class="crit-item"><div class="crit-dot" style="background:#10b981"></div><span class="crit-text">'+g+'</span></div>'});
+  if(d.mh_analysis.key_gaps)d.mh_analysis.key_gaps.forEach(function(g){h+='<div class="crit-item"><div class="crit-dot purple"></div><span class="crit-text">'+g+'</span></div>'});
+  h+='</div></div></div>';
+  if(d.dual_diagnosis_note){h+='<div class="slabel">Dual diagnosis considerations</div><div class="sum-box">'+d.dual_diagnosis_note+'</div>'}
+  h+='<div class="slabel">Overall recommendation</div><div class="sum-box"><strong>Next step:</strong> '+d.overall_recommendation+'</div><div class="action-bar"><button class="btn" onclick="doExport(\'mhsud\')">Export PDF report</button></div></div>';
   window._mhData=d;window._mhPKey=pKey;
   document.getElementById('mhsud-results').innerHTML=h;
   document.getElementById('mhsud-results').scrollIntoView({behavior:'smooth',block:'start'});
@@ -597,16 +609,16 @@ function renderMHSUD(d,pKey){
 
 function renderSingle(d,pKey,lKey,originalText){
   const p=PAYERS[pKey]||PAYERS.sunshine;const l=LOCS[lKey]||LOCS.php;
-  let h=`<div class="panel"><div style="text-align:center;padding:.75rem 0 1rem"><div class="score-donut ${sc(d.auth_score)}">${Math.round(d.auth_score)}%</div><span class="verdict-chip ${vc(d.verdict)}">${d.verdict_label}</span><div style="font-size:11px;color:var(--ink4);font-family:var(--mono);margin-top:4px">${p.name} · ${l.label} (${l.asam})</div></div>
-  <div class="payer-info-bar"><strong>${p.fw}</strong> — ${p.notes}</div>
-  <div class="sum-box">${d.summary}</div>
-  <div class="stats-row"><div class="stat-box"><div class="sbl">Criteria met</div><div class="sbv g">${d.met_count}</div></div><div class="stat-box"><div class="sbl">Partial</div><div class="sbv a">${d.partial_count}</div></div><div class="stat-box"><div class="sbl">Gaps</div><div class="sbv r">${d.gap_count}</div></div></div>`;
-  if(d.critical_gaps?.length){h+=`<div style="margin-bottom:1rem"><div class="slabel">Critical gaps</div>`;d.critical_gaps.forEach(g=>{h+=`<div class="crit-item"><div class="crit-dot"></div><span class="crit-text">${g}</span></div>`});h+=`</div>`}
-  if(d.payer_specific_issues?.length){h+=`<div style="margin-bottom:1rem"><div class="slabel">Payer-specific requirements</div>`;d.payer_specific_issues.forEach(g=>{h+=`<div class="crit-item"><div class="crit-dot blue"></div><span class="crit-text">${g}</span></div>`});h+=`</div>`}
-  h+=`<div class="slabel" style="margin-bottom:6px">ASAM dimensional assessment</div>${renderDims(d.dimensions,'s')}`;
-  h+=`<div style="margin-top:1rem"><div class="slabel">Recommendation</div><div class="sum-box"><strong>Next step:</strong> ${d.overall_recommendation}</div></div>`;
-  h+=`<div class="action-bar"><button class="btn btn-accent" onclick="draftRemediation(window._sData.d,window._sData.text,'${pKey}','${lKey}',this,'rem-single')">Draft remediation ↗</button><button class="btn" onclick="doExport('single')">Export PDF</button><button class="btn btn-ghost" onclick="document.getElementById('single-results').innerHTML=''">Clear</button></div><div id="rem-single"></div></div>`;
-  window._sData={d,pKey,lKey,text:originalText};
+  let h='<div class="panel"><div style="text-align:center;padding:.75rem 0 1rem"><div class="score-donut '+sc(d.auth_score)+'">'+Math.round(d.auth_score)+'%</div><span class="verdict-chip '+vc(d.verdict)+'">'+d.verdict_label+'</span><div style="font-size:11px;color:var(--ink4);font-family:var(--mono);margin-top:4px">'+p.name+' · '+l.label+' ('+l.asam+')</div></div>';
+  h+='<div class="payer-info-bar"><strong>'+p.fw+'</strong> — '+p.notes+'</div>';
+  h+='<div class="sum-box">'+d.summary+'</div>';
+  h+='<div class="stats-row"><div class="stat-box"><div class="sbl">Criteria met</div><div class="sbv g">'+d.met_count+'</div></div><div class="stat-box"><div class="sbl">Partial</div><div class="sbv a">'+d.partial_count+'</div></div><div class="stat-box"><div class="sbl">Gaps</div><div class="sbv r">'+d.gap_count+'</div></div></div>';
+  if(d.critical_gaps&&d.critical_gaps.length){h+='<div style="margin-bottom:1rem"><div class="slabel">Critical gaps</div>';d.critical_gaps.forEach(function(g){h+='<div class="crit-item"><div class="crit-dot"></div><span class="crit-text">'+g+'</span></div>'});h+='</div>'}
+  if(d.payer_specific_issues&&d.payer_specific_issues.length){h+='<div style="margin-bottom:1rem"><div class="slabel">Payer-specific requirements</div>';d.payer_specific_issues.forEach(function(g){h+='<div class="crit-item"><div class="crit-dot blue"></div><span class="crit-text">'+g+'</span></div>'});h+='</div>'}
+  h+='<div class="slabel" style="margin-bottom:6px">ASAM dimensional assessment</div>'+renderDims(d.dimensions,'s');
+  h+='<div style="margin-top:1rem"><div class="slabel">Recommendation</div><div class="sum-box"><strong>Next step:</strong> '+d.overall_recommendation+'</div></div>';
+  h+='<div class="action-bar"><button class="btn btn-accent" onclick="draftRemediation(window._sData.d,window._sData.text,\''+pKey+'\',\''+lKey+'\',this,\'rem-single\')">Draft remediation ↗</button><button class="btn" onclick="doExport(\'single\')">Export PDF</button><button class="btn btn-ghost" onclick="document.getElementById(\'single-results\').innerHTML=\'\'">Clear</button></div><div id="rem-single"></div></div>';
+  window._sData={d:d,pKey:pKey,lKey:lKey,text:originalText};
   document.getElementById('single-results').innerHTML=h;
   document.getElementById('single-results').scrollIntoView({behavior:'smooth',block:'start'});
 }
@@ -617,9 +629,9 @@ function renderConcurrent(d,pKey,lKey){
   const csColors={supported:'vc-approved',step_down_indicated:'vc-supp',step_up_indicated:'vc-denied',insufficient_evidence:'vc-insuff'};
   const csLabels={supported:'Continued stay supported',step_down_indicated:'Step-down indicated',step_up_indicated:'Step-up indicated',insufficient_evidence:'Insufficient evidence'};
   const csCard={supported:'',step_down_indicated:'step-down',step_up_indicated:'step-up',insufficient_evidence:'insuff'};
-  let h=`<div class="panel"><div style="text-align:center;padding:.75rem 0 1rem"><div class="score-donut ${sc(d.auth_score)}">${Math.round(d.auth_score)}%</div><span class="verdict-chip ${vc(d.verdict)}">${d.verdict_label}</span><div style="font-size:11px;color:var(--ink4);font-family:var(--mono);margin-top:4px">${p.name} · ${l.label} — Continued Stay</div></div>`;
-  if(cs){h+=`<div style="margin-bottom:1rem"><div class="slabel">Continued stay assessment</div><div class="cs-card ${csCard[cs.status]||''}"><span class="verdict-chip ${csColors[cs.status]||'vc-supp'}" style="margin-bottom:6px;display:inline-block">${csLabels[cs.status]||cs.status}</span><div style="font-size:12px;color:var(--ink3);line-height:1.7;margin-bottom:4px">${cs.rationale||''}</div>${cs.trajectory?`<div style="font-size:11px;font-family:var(--mono);color:var(--ink3)">Trajectory: ${cs.trajectory}</div>`:''}</div></div>`}
-  h+=`<div class="sum-box">${d.summary}</div><div class="stats-row"><div class="stat-box"><div class="sbl">Met</div><div class="sbv g">${d.met_count}</div></div><div class="stat-box"><div class="sbl">Partial</div><div class="sbv a">${d.partial_count}</div></div><div class="stat-box"><div class="sbl">Gaps</div><div class="sbv r">${d.gap_count}</div></div></div>${renderDims(d.dimensions,'c')}<div style="margin-top:1rem"><div class="slabel">Recommendation</div><div class="sum-box"><strong>Next step:</strong> ${d.overall_recommendation}</div></div><div class="action-bar"><button class="btn" onclick="doExport('concurrent')">Export PDF</button></div></div>`;
+  let h='<div class="panel"><div style="text-align:center;padding:.75rem 0 1rem"><div class="score-donut '+sc(d.auth_score)+'">'+Math.round(d.auth_score)+'%</div><span class="verdict-chip '+vc(d.verdict)+'">'+d.verdict_label+'</span><div style="font-size:11px;color:var(--ink4);font-family:var(--mono);margin-top:4px">'+p.name+' · '+l.label+' — Continued Stay</div></div>';
+  if(cs){h+='<div style="margin-bottom:1rem"><div class="slabel">Continued stay assessment</div><div class="cs-card '+(csCard[cs.status]||'')+'"><span class="verdict-chip '+(csColors[cs.status]||'vc-supp')+'" style="margin-bottom:6px;display:inline-block">'+(csLabels[cs.status]||cs.status)+'</span><div style="font-size:12px;color:var(--ink3);line-height:1.7;margin-bottom:4px">'+(cs.rationale||'')+'</div>'+(cs.trajectory?'<div style="font-size:11px;font-family:var(--mono);color:var(--ink3)">Trajectory: '+cs.trajectory+'</div>':'')+'</div></div>'}
+  h+='<div class="sum-box">'+d.summary+'</div><div class="stats-row"><div class="stat-box"><div class="sbl">Met</div><div class="sbv g">'+d.met_count+'</div></div><div class="stat-box"><div class="sbl">Partial</div><div class="sbv a">'+d.partial_count+'</div></div><div class="stat-box"><div class="sbl">Gaps</div><div class="sbv r">'+d.gap_count+'</div></div></div>'+renderDims(d.dimensions,'c')+'<div style="margin-top:1rem"><div class="slabel">Recommendation</div><div class="sum-box"><strong>Next step:</strong> '+d.overall_recommendation+'</div></div><div class="action-bar"><button class="btn" onclick="doExport(\'concurrent\')">Export PDF</button></div></div>';
   window._cData=d;
   document.getElementById('conc-results').innerHTML=h;
   document.getElementById('conc-results').scrollIntoView({behavior:'smooth',block:'start'});
@@ -627,35 +639,35 @@ function renderConcurrent(d,pKey,lKey){
 
 function renderBatch(results,pKey,lKey){
   const p=PAYERS[pKey]||PAYERS.sunshine;const l=LOCS[lKey]||LOCS.php;
-  const valid=results.filter(r=>r.data);
-  const avg=valid.length?Math.round(valid.reduce((s,r)=>s+r.data.auth_score,0)/valid.length):0;
-  const approved=valid.filter(r=>r.data.verdict==='likely_approved').length;
-  const denied=valid.filter(r=>r.data.verdict==='likely_denied').length;
-  let h=`<div class="panel"><div class="panel-title">Batch — ${results.length} documents</div><div style="font-size:11px;font-family:var(--mono);color:var(--ink3);margin-bottom:10px">${p.name} · ${l.label} (${l.asam})</div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1.25rem"><div class="stat-box"><div class="sbl">Avg score</div><div class="sbv ${avg>=70?'g':avg>=40?'a':'r'}">${avg}%</div></div><div class="stat-box"><div class="sbl">Approved</div><div class="sbv g">${approved}</div></div><div class="stat-box"><div class="sbl">Denied</div><div class="sbv r">${denied}</div></div><div class="stat-box"><div class="sbl">Needs work</div><div class="sbv a">${valid.length-approved-denied}</div></div></div>`;
-  results.forEach((r,idx)=>{
-    if(r.error){h+=`<div class="dim-row"><div class="dim-hdr"><div class="dot dot-r"></div><div class="dim-name">${r.label}</div><span style="font-size:11px;color:var(--ink4);font-family:var(--mono)">Error: ${r.error}</span></div></div>`;return}
+  const valid=results.filter(function(r){return r.data});
+  const avg=valid.length?Math.round(valid.reduce(function(s,r){return s+r.data.auth_score},0)/valid.length):0;
+  const approved=valid.filter(function(r){return r.data.verdict==='likely_approved'}).length;
+  const denied=valid.filter(function(r){return r.data.verdict==='likely_denied'}).length;
+  let h='<div class="panel"><div class="panel-title">Batch — '+results.length+' document'+(results.length>1?'s':'')+'</div><div style="font-size:11px;font-family:var(--mono);color:var(--ink3);margin-bottom:10px">'+p.name+' · '+l.label+' ('+l.asam+')</div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1.25rem"><div class="stat-box"><div class="sbl">Avg score</div><div class="sbv '+(avg>=70?'g':avg>=40?'a':'r')+'">'+avg+'%</div></div><div class="stat-box"><div class="sbl">Approved</div><div class="sbv g">'+approved+'</div></div><div class="stat-box"><div class="sbl">Denied</div><div class="sbv r">'+denied+'</div></div><div class="stat-box"><div class="sbl">Needs work</div><div class="sbv a">'+(valid.length-approved-denied)+'</div></div></div>';
+  results.forEach(function(r,idx){
+    if(r.error){h+='<div class="dim-row"><div class="dim-hdr"><div class="dot dot-r"></div><div class="dim-name">'+r.label+'</div><span style="font-size:11px;color:var(--ink4);font-family:var(--mono)">Error: '+r.error+'</span></div></div>';return}
     const dd=r.data;
-    h+=`<div class="dim-row"><div class="dim-hdr" onclick="td('b${idx}')"><div class="dot ${dd.auth_score>=70?'dot-g':dd.auth_score>=40?'dot-a':'dot-r'}"></div><div class="dim-name">${r.label}</div><span style="font-size:12px;font-family:var(--mono);font-weight:500;margin-right:6px;color:${dd.auth_score>=70?'#065f46':dd.auth_score>=40?'#92400e':'#b91c1c'}">${Math.round(dd.auth_score)}%</span><span class="badge ${vc(dd.verdict)}">${dd.verdict_label}</span><span class="chevron" id="cv-b${idx}" style="margin-left:6px">▼</span></div><div class="dim-body" id="db-b${idx}"><div class="sum-box" style="margin-bottom:8px">${dd.summary}</div>${dd.critical_gaps?.map(g=>`<div class="crit-item"><div class="crit-dot"></div><span class="crit-text">${g}</span></div>`).join('')||''}<div class="action-bar" style="margin-top:8px;padding-top:8px"><button class="btn btn-accent btn-sm" onclick="draftRemediation(window._bData[${idx}].data,window._bData[${idx}].text,'${pKey}','${lKey}',this,'brem${idx}')">Draft remediation ↗</button></div><div id="brem${idx}"></div></div></div>`;
+    h+='<div class="dim-row"><div class="dim-hdr" onclick="td(\'b'+idx+'\')"><div class="dot '+(dd.auth_score>=70?'dot-g':dd.auth_score>=40?'dot-a':'dot-r')+'"></div><div class="dim-name">'+r.label+'</div><span style="font-size:12px;font-family:var(--mono);font-weight:500;margin-right:6px;color:'+(dd.auth_score>=70?'#065f46':dd.auth_score>=40?'#92400e':'#b91c1c')+'">'+Math.round(dd.auth_score)+'%</span><span class="badge '+vc(dd.verdict)+'">'+dd.verdict_label+'</span><span class="chevron" id="cv-b'+idx+'" style="margin-left:6px">▼</span></div><div class="dim-body" id="db-b'+idx+'"><div class="sum-box" style="margin-bottom:8px">'+dd.summary+'</div>'+(dd.critical_gaps?dd.critical_gaps.map(function(g){return'<div class="crit-item"><div class="crit-dot"></div><span class="crit-text">'+g+'</span></div>'}).join(''):'')+'<div class="action-bar" style="margin-top:8px;padding-top:8px"><button class="btn btn-accent btn-sm" onclick="draftRemediation(window._bData['+idx+'].data,window._bData['+idx+'].text,\''+pKey+'\',\''+lKey+'\',this,\'brem'+idx+'\')">Draft remediation ↗</button></div><div id="brem'+idx+'"></div></div></div>';
   });
-  h+=`<div class="action-bar"><button class="btn" onclick="doExport('batch')">Export batch PDF</button></div></div>`;
+  h+='<div class="action-bar"><button class="btn" onclick="doExport(\'batch\')">Export batch PDF</button></div></div>';
   window._bData=results;
   document.getElementById('batch-results').innerHTML=h;
   document.getElementById('batch-results').scrollIntoView({behavior:'smooth',block:'start'});
 }
 
 async function draftRemediation(d,originalText,pKey,lKey,btn,targetId){
-  const gaps=d.dimensions.filter(x=>x.status==='gap'||x.status==='partial');
+  const gaps=d.dimensions.filter(function(x){return x.status==='gap'||x.status==='partial'});
   if(!gaps.length){alert('No gaps found — documentation appears sufficient.');return}
   const orig=btn.textContent;btn.disabled=true;btn.textContent='Drafting...';
   const p=PAYERS[pKey]||PAYERS.sunshine;const l=LOCS[lKey]||LOCS.php;
-  const sys=`You are a behavioral health documentation specialist. Write specific supplemental clinical language to strengthen prior authorization for ${l.label} (${l.asam}) with ${p.name}. Write in the style of a clinical progress note addendum. Return ONLY valid JSON: {"addendum_intro":string,"remediations":[{"dimension":string,"draft_language":string}]}`;
+  const sys='You are a behavioral health documentation specialist. Write specific supplemental clinical language to strengthen prior authorization for '+l.label+' ('+l.asam+') with '+p.name+'. Write in the style of a clinical progress note addendum. Return ONLY valid JSON: {"addendum_intro":string,"remediations":[{"dimension":string,"draft_language":string}]}';
   try{
-    const parsed=await callAPI(sys,`ORIGINAL NOTE:\n${originalText}\n\nGAPS:\n${gaps.map(g=>`Dim ${g.id} — ${g.name}: ${g.recommendation}`).join('\n')}`);
+    const parsed=await callAPI(sys,'ORIGINAL NOTE:\n'+originalText+'\n\nGAPS:\n'+gaps.map(function(g){return'Dim '+g.id+' — '+g.name+': '+g.recommendation}).join('\n'));
     const target=document.getElementById(targetId);if(!target)return;
-    let h=`<div class="rem-card"><div class="rem-card-hdr"><span>Remediation draft</span><button class="btn btn-sm" onclick="copyRem('${targetId}-c')">Copy all</button></div><div class="rem-card-body" id="${targetId}-c">`;
-    if(parsed.addendum_intro)h+=`<div style="font-size:12px;color:var(--ink3);line-height:1.7;margin-bottom:12px;font-style:italic;padding:8px 10px;background:var(--surface2);border-radius:var(--radius)">${parsed.addendum_intro}</div>`;
-    parsed.remediations.forEach(r=>{h+=`<div class="rem-dim"><div class="rem-dim-label">${r.dimension}</div><div class="rem-dim-text">${r.draft_language}</div></div>`});
-    h+=`</div></div>`;
+    let h='<div class="rem-card"><div class="rem-card-hdr"><span>Remediation draft</span><button class="btn btn-sm" onclick="copyRem(\''+targetId+'-c\')">Copy all</button></div><div class="rem-card-body" id="'+targetId+'-c">';
+    if(parsed.addendum_intro)h+='<div style="font-size:12px;color:var(--ink3);line-height:1.7;margin-bottom:12px;font-style:italic;padding:8px 10px;background:var(--surface2);border-radius:var(--radius)">'+parsed.addendum_intro+'</div>';
+    parsed.remediations.forEach(function(r){h+='<div class="rem-dim"><div class="rem-dim-label">'+r.dimension+'</div><div class="rem-dim-text">'+r.draft_language+'</div></div>'});
+    h+='</div></div>';
     target.innerHTML=h;target.scrollIntoView({behavior:'smooth',block:'start'});
   }catch(e){alert('Remediation failed: '+e.message)}
   btn.disabled=false;btn.textContent=orig;
@@ -663,49 +675,47 @@ async function draftRemediation(d,originalText,pKey,lKey,btn,targetId){
 
 function copyRem(id){
   const el=document.getElementById(id);if(!el)return;
-  navigator.clipboard.writeText(el.innerText||el.textContent).then(()=>{const b=event.target;const o=b.textContent;b.textContent='Copied!';setTimeout(()=>b.textContent=o,2000)}).catch(()=>alert('Please select and copy manually.'));
+  navigator.clipboard.writeText(el.innerText||el.textContent).then(function(){const b=event.target;const o=b.textContent;b.textContent='Copied!';setTimeout(function(){b.textContent=o},2000)}).catch(function(){alert('Please select and copy manually.')});
 }
 
 function doExport(mode){
-  let lines=['AUTH.REVIEW — Prior Authorization Review Platform','Generated: '+new Date().toLocaleString(),''];
-  if(mode==='single'&&window._sData){const{d,pKey,lKey}=window._sData;lines=lines.concat(buildReport(d,PAYERS[pKey]||PAYERS.sunshine,LOCS[lKey]||LOCS.php,'Single Document Review'))}
+  var lines=['AUTH.REVIEW — Prior Authorization Review Platform','Generated: '+new Date().toLocaleString(),''];
+  if(mode==='single'&&window._sData){var r=window._sData;lines=lines.concat(buildReport(r.d,PAYERS[r.pKey]||PAYERS.sunshine,LOCS[r.lKey]||LOCS.php,'Single Document Review'))}
   else if(mode==='mhsud'&&window._mhData){
-    const d=window._mhData;const p=PAYERS[window._mhPKey]||PAYERS.sunshine;
+    var d=window._mhData;var p=PAYERS[window._mhPKey]||PAYERS.sunshine;
     lines.push('MH vs SUD Framework Analysis');lines.push('='.repeat(60));
-    lines.push('Payer: '+p.name);lines.push('Primary Dx: '+d.primary_dx_type.toUpperCase()+' ('+d.primary_dx_confidence+' confidence)');
-    lines.push('Rationale: '+d.primary_dx_rationale);lines.push('Framework: '+d.payer_applicable_framework);lines.push('');
+    lines.push('Payer: '+p.name);lines.push('Primary Dx: '+d.primary_dx_type.toUpperCase());
+    lines.push('Framework: '+d.payer_applicable_framework);lines.push('');
     if(d.parity_alert){lines.push('PARITY ALERT: '+d.parity_alert_detail);lines.push('')}
     lines.push('SUD ANALYSIS ('+p.sud_fw+')');lines.push('Score: '+Math.round(d.sud_analysis.auth_score)+'% — '+d.sud_analysis.verdict_label);
-    lines.push('Recommended LOC: '+d.sud_analysis.recommended_loc);lines.push(d.sud_analysis.summary);
-    if(d.sud_analysis.key_gaps?.length)lines.push('Gaps: '+d.sud_analysis.key_gaps.join('; '));lines.push('');
+    lines.push(d.sud_analysis.summary);if(d.sud_analysis.key_gaps)lines.push('Gaps: '+d.sud_analysis.key_gaps.join('; '));lines.push('');
     lines.push('MH ANALYSIS ('+p.mh_fw+')');lines.push('Score: '+Math.round(d.mh_analysis.auth_score)+'% — '+d.mh_analysis.verdict_label);
-    lines.push('Recommended LOC: '+d.mh_analysis.recommended_loc);lines.push(d.mh_analysis.summary);
-    if(d.mh_analysis.key_gaps?.length)lines.push('Gaps: '+d.mh_analysis.key_gaps.join('; '));lines.push('');
+    lines.push(d.mh_analysis.summary);if(d.mh_analysis.key_gaps)lines.push('Gaps: '+d.mh_analysis.key_gaps.join('; '));lines.push('');
     if(d.dual_diagnosis_note){lines.push('Dual Diagnosis: '+d.dual_diagnosis_note);lines.push('')}
     lines.push('RECOMMENDATION: '+d.overall_recommendation);
   }
   else if(mode==='concurrent'&&window._cData){
     lines=lines.concat(buildReport(window._cData,PAYERS[selP2]||PAYERS.sunshine,LOCS[selL2]||LOCS.php,'Concurrent Stay Review'));
-    if(window._cData.continued_stay_assessment){const cs=window._cData.continued_stay_assessment;lines.push('CONTINUED STAY: '+cs.status);lines.push(cs.rationale);if(cs.trajectory)lines.push('Trajectory: '+cs.trajectory)}
+    if(window._cData.continued_stay_assessment){var cs=window._cData.continued_stay_assessment;lines.push('CONTINUED STAY: '+cs.status);lines.push(cs.rationale);if(cs.trajectory)lines.push('Trajectory: '+cs.trajectory)}
   }
-  else if(mode==='batch'&&window._bData){window._bData.forEach((r,i)=>{if(r.data)lines=lines.concat(buildReport(r.data,PAYERS[r.pKey]||PAYERS.sunshine,LOCS[r.lKey]||LOCS.php,'Document '+(i+1)+': '+r.label));lines.push('');lines.push('='.repeat(60));lines.push('')})}
+  else if(mode==='batch'&&window._bData){window._bData.forEach(function(r,i){if(r.data)lines=lines.concat(buildReport(r.data,PAYERS[r.pKey]||PAYERS.sunshine,LOCS[r.lKey]||LOCS.php,'Document '+(i+1)+': '+r.label));lines.push('');lines.push('='.repeat(60));lines.push('')})}
   else{alert('No results to export yet.');return}
   openPrint('AUTH.REVIEW Report',lines.join('\n'));
 }
 
 function buildReport(d,p,l,heading){
-  const lines=[heading,'='.repeat(60),'Payer: '+p.name,'LOC: '+l.label+' ('+l.asam+')','Framework: '+p.fw,'','SCORE: '+Math.round(d.auth_score)+'% — '+d.verdict_label,'','SUMMARY: '+d.summary,'','DIMENSIONS:'];
-  d.dimensions.forEach(dim=>{lines.push(`Dim.${dim.id} ${dim.name}: [${dim.status.toUpperCase()}]`);lines.push('  '+dim.finding);lines.push('  Add: '+dim.recommendation);lines.push('')});
-  if(d.critical_gaps?.length){lines.push('CRITICAL GAPS:');d.critical_gaps.forEach(g=>lines.push('• '+g));lines.push('')}
-  if(d.payer_specific_issues?.length){lines.push('PAYER ISSUES:');d.payer_specific_issues.forEach(g=>lines.push('• '+g));lines.push('')}
+  var lines=[heading,'='.repeat(60),'Payer: '+p.name,'LOC: '+l.label+' ('+l.asam+')','Framework: '+p.fw,'','SCORE: '+Math.round(d.auth_score)+'% — '+d.verdict_label,'','SUMMARY: '+d.summary,'','DIMENSIONS:'];
+  d.dimensions.forEach(function(dim){lines.push('Dim.'+dim.id+' '+dim.name+': ['+dim.status.toUpperCase()+']');lines.push('  '+dim.finding);lines.push('  Add: '+dim.recommendation);lines.push('')});
+  if(d.critical_gaps&&d.critical_gaps.length){lines.push('CRITICAL GAPS:');d.critical_gaps.forEach(function(g){lines.push('• '+g)});lines.push('')}
+  if(d.payer_specific_issues&&d.payer_specific_issues.length){lines.push('PAYER ISSUES:');d.payer_specific_issues.forEach(function(g){lines.push('• '+g)});lines.push('')}
   lines.push('RECOMMENDATION: '+d.overall_recommendation);
   return lines;
 }
 
 function openPrint(title,content){
-  const w=window.open('','_blank','width=820,height=700');
+  var w=window.open('','_blank','width=820,height=700');
   if(!w){alert('Please allow popups to export.');return}
-  w.document.write(`<!DOCTYPE html><html><head><title>${title}</title><style>body{font-family:'Courier New',monospace;font-size:12px;line-height:1.7;padding:40px;max-width:740px;margin:0 auto;color:#111}h1{font-size:14px;font-family:sans-serif;margin-bottom:16px}pre{white-space:pre-wrap;word-break:break-word}.np{margin-bottom:16px}button{font-family:monospace;padding:8px 16px;cursor:pointer;border:1px solid #ccc;border-radius:4px;background:#f5f5f5;margin-right:8px}@media print{.np{display:none}}</style></head><body><div class="np"><button onclick="window.print()">Print / Save as PDF</button><button onclick="navigator.clipboard.writeText(document.getElementById('rc').innerText).then(()=>alert('Copied!'))">Copy text</button></div><h1>${title}</h1><pre id="rc">${content.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</pre></body></html>`);
+  w.document.write('<!DOCTYPE html><html><head><title>'+title+'</title><style>body{font-family:\'Courier New\',monospace;font-size:12px;line-height:1.7;padding:40px;max-width:740px;margin:0 auto;color:#111}h1{font-size:14px;font-family:sans-serif;margin-bottom:16px}pre{white-space:pre-wrap;word-break:break-word}.np{margin-bottom:16px}button{font-family:monospace;padding:8px 16px;cursor:pointer;border:1px solid #ccc;border-radius:4px;background:#f5f5f5;margin-right:8px}@media print{.np{display:none}}</style></head><body><div class="np"><button onclick="window.print()">Print / Save as PDF</button><button onclick="navigator.clipboard.writeText(document.getElementById(\'rc\').innerText).then(()=>alert(\'Copied!\'))">Copy text</button></div><h1>'+title+'</h1><pre id="rc">'+content.replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</pre></body></html>');
   w.document.close();
 }
 
