@@ -176,7 +176,6 @@ input[type="file"]{display:none}
       <button class="mode-tab" onclick="setMode('batch',this)">Batch Review</button>
     </div>
   </div>
-
   <div class="page active" id="mode-single">
     <div class="panel">
       <div class="panel-title">Payer selection</div>
@@ -239,7 +238,6 @@ input[type="file"]{display:none}
     <div id="single-loading" style="display:none"><div class="panel"><div class="spinner-wrap"><div class="spinner"></div><p id="sLoadMsg">Analyzing...</p><small>10-20 seconds</small></div></div></div>
     <div id="single-results"></div>
   </div>
-
   <div class="page" id="mode-mhsud">
     <div class="panel">
       <div class="panel-title">Payer selection</div>
@@ -281,7 +279,6 @@ input[type="file"]{display:none}
     <div id="mhsud-loading" style="display:none"><div class="panel"><div class="spinner-wrap"><div class="spinner"></div><p id="mLoadMsg">Analyzing under both frameworks...</p><small>15-25 seconds</small></div></div></div>
     <div id="mhsud-results"></div>
   </div>
-
   <div class="page" id="mode-concurrent">
     <div class="panel">
       <div class="panel-title">Payer &amp; level of care</div>
@@ -322,7 +319,6 @@ input[type="file"]{display:none}
     <div id="conc-loading" style="display:none"><div class="panel" style="margin-top:1rem"><div class="spinner-wrap"><div class="spinner"></div><p id="cLoadMsg">Comparing documents...</p><small>10-20 seconds</small></div></div></div>
     <div id="conc-results"></div>
   </div>
-
   <div class="page" id="mode-batch">
     <div class="panel">
       <div class="panel-title">Payer &amp; level of care</div>
@@ -372,8 +368,8 @@ input[type="file"]{display:none}
     <div id="batch-results"></div>
   </div>
 </div>
-
 <script>
+// ALL PATIENT DATA BELOW IS FICTIONAL DUMMY DATA — NO REAL PHI
 const PAYERS={
   sunshine:{name:'Sunshine Health (FL Medicaid)',fw:'ASAM Criteria (SUD) / InterQual (MH)',sud_fw:'ASAM Criteria',mh_fw:'InterQual',notes:'PHP is an In Lieu of Service. ASAM 2.5 for primary SUD; InterQual for primary MH. Extended stay fax form required.',parity_note:'Sunshine Health uses ASAM for SUD and InterQual for MH. Primary diagnosis determines which framework applies.'},
   aetna_med:{name:'Aetna Better Health FL',fw:'ASAM Criteria / MCG',sud_fw:'ASAM Criteria',mh_fw:'MCG (Milliman)',notes:'ASAM for SUD, MCG for MH. Bio-psychosocial assessment required.',parity_note:'Aetna applies ASAM for SUD and MCG for MH.'},
@@ -404,12 +400,10 @@ const LOCS={
   mat:{label:'MAT / OTP',asam:'OTP',dims:['Opioid use disorder with physical dependence','Biomedical stability for community-based MAT','Co-occurring conditions stable for outpatient','Motivated to engage in MAT and counseling','Risk of relapse without pharmacological support','Stable enough for community-based MAT']},
   inpat:{label:'Inpatient Psych / Dual Dx',asam:'ASAM 4',dims:['Acute severe withdrawal or medical instability requiring hospital-level management','Significant acute biomedical conditions requiring inpatient care','Acute psychiatric crisis — SI/HI, psychosis, severe mood episode','Unable to engage in treatment due to acute severity','Imminent risk of harm without hospitalization','Environment acutely dangerous or patient unable to care for self']}
 };
-const SAMPLE1=`PATIENT: Bradford Baker, DOB 01/27/1979\nADMISSION: 03/27/2026 | CRC Sarasota\n\nMedical Progress Note — 04/02/2026\nProvider: Rishma Kaur, APRN\n\nPatient is a 47-year-old male presenting for weekly medication management. Alert, cooperative, well-groomed. Mood "good overall" with some anxiety. Thought processes coherent. Denied SI, HI, withdrawal symptoms. Good insight. Compliant with treatment plan.\n\nPHYSICAL: BP 142/88, HR 52, RR 22. Regular rate. No SOB. Normal gait. No edema. No focal deficits.\n\nMSE: Calm, cooperative. Congruent affect. Fluent speech. Logical thought. Denies SI/HI/AH/VH. Oriented x4. Insight good.\n\nMEDS: Buprenorphine-naloxone 8-2mg SL daily, fluoxetine 20mg, gabapentin 300mg TID, olanzapine 10mg QHS. NKA.\n\nPLAN: Continue medications. Monitor progress. Encourage therapy. Follow up weekly.`;
-const SAMPLE2=`PATIENT: Bradford Baker — Week 2 Progress Note 04/09/2026\n\nContinues in residential treatment. Attended all groups. Reports cravings 4/10 evenings. Opening up about family conflict as relapse driver. Sleep disrupted despite olanzapine.\n\nMSE: Alert and oriented. Mood "frustrated but hopeful." Congruent affect. Denies SI/HI. No withdrawal. Insight fair and improving.\n\nExpressed ambivalence about length of stay. MI utilized. Agreed to remain through week 4.\n\nDRUG SCREEN: Negative except prescribed buprenorphine.\n\nPLAN: Continue meds. Increase individual therapy to 3x/week. Family session scheduled. Monitor sleep and cravings.`;
-
+const SAMPLE1=`PATIENT: John Sample, DOB [REDACTED]\nADMISSION: [DATE] | Sample Treatment Center\n\nMedical Progress Note — [DATE]\nProvider: Jane Smith, APRN\n\nPatient is a middle-aged male presenting for weekly medication management. Alert, cooperative, well-groomed. Mood "good overall" with some anxiety. Thought processes coherent. Denied SI, HI, withdrawal symptoms. Good insight. Compliant with treatment plan.\n\nPHYSICAL: BP 142/88, HR 52, RR 22. Regular rate. No SOB. Normal gait. No edema. No focal deficits.\n\nMSE: Calm, cooperative. Congruent affect. Fluent speech. Logical thought. Denies SI/HI/AH/VH. Oriented x4. Insight good.\n\nMEDS: Buprenorphine-naloxone 8-2mg SL daily, fluoxetine 20mg, gabapentin 300mg TID, olanzapine 10mg QHS. NKA.\n\nPLAN: Continue medications. Monitor progress. Encourage therapy. Follow up weekly.`;
+const SAMPLE2=`PATIENT: John Sample — Week 2 Progress Note [DATE]\n\nContinues in residential treatment. Attended all groups. Reports cravings 4/10 evenings. Opening up about family conflict as relapse driver. Sleep disrupted despite olanzapine.\n\nMSE: Alert and oriented. Mood "frustrated but hopeful." Congruent affect. Denies SI/HI. No withdrawal. Insight fair and improving.\n\nExpressed ambivalence about length of stay. MI utilized. Agreed to remain through week 4.\n\nDRUG SCREEN: Negative except prescribed buprenorphine.\n\nPLAN: Continue meds. Increase individual therapy to 3x/week. Family session scheduled. Monitor sleep and cravings.`;
 let selP='sunshine',selL='php',selP2='sunshine',selL2='php',selPM='sunshine';
 let bSlotCount=0;
-
 function setMode(m,el){
   document.querySelectorAll('.mode-tab').forEach(t=>t.classList.remove('active'));
   el.classList.add('active');
@@ -420,84 +414,69 @@ function sl(el){document.querySelectorAll('#mode-single .ltag').forEach(t=>t.cla
 function sp2(el){document.querySelectorAll('#concPayerWrap .ptag').forEach(t=>t.classList.remove('sel'));el.classList.add('sel');selP2=el.dataset.p2}
 function sl2(el){document.querySelectorAll('#concLocWrap .ltag').forEach(t=>t.classList.remove('sel'));el.classList.add('sel');selL2=el.dataset.l2}
 function spm(el){document.querySelectorAll('#mode-mhsud .ptag').forEach(t=>t.classList.remove('sel'));el.classList.add('sel');selPM=el.dataset.pm}
-
-function setupFileInput(inputId, textId, pdfKey) {
-  const input = document.getElementById(inputId);
-  if (!input) return;
-  input.addEventListener('change', function(e) {
-    const f = e.target.files[0];
-    if (!f) return;
-    if (f.type === 'text/plain') {
-      const r = new FileReader();
-      r.onload = function(ev) {
-        document.getElementById(textId).value = ev.target.result;
-        document.getElementById(textId).style.color = 'var(--ink)';
-        if (textId === 'singleDoc') document.getElementById('sCC').textContent = ev.target.result.length.toLocaleString() + ' chars';
+function setupFileInput(inputId,textId,pdfKey){
+  const input=document.getElementById(inputId);
+  if(!input)return;
+  input.addEventListener('change',function(e){
+    const f=e.target.files[0];
+    if(!f)return;
+    if(f.type==='text/plain'){
+      const r=new FileReader();
+      r.onload=function(ev){
+        document.getElementById(textId).value=ev.target.result;
+        document.getElementById(textId).style.color='var(--ink)';
+        if(textId==='singleDoc')document.getElementById('sCC').textContent=ev.target.result.length.toLocaleString()+' chars';
       };
       r.readAsText(f);
-    } else if (f.type === 'application/pdf') {
-      const r = new FileReader();
-      r.onload = function(ev) {
-        window[pdfKey] = ev.target.result.split(',')[1];
-        document.getElementById(textId).value = '[PDF loaded: ' + f.name + ']';
-        document.getElementById(textId).style.color = 'var(--ink3)';
+    }else if(f.type==='application/pdf'){
+      const r=new FileReader();
+      r.onload=function(ev){
+        window[pdfKey]=ev.target.result.split(',')[1];
+        document.getElementById(textId).value='[PDF loaded: '+f.name+']';
+        document.getElementById(textId).style.color='var(--ink3)';
       };
       r.readAsDataURL(f);
-    } else {
-      alert('Please upload a .txt or .pdf file only.');
-    }
+    }else{alert('Please upload a .txt or .pdf file only.');}
   });
 }
-
-window.addEventListener('DOMContentLoaded', function() {
-  setupFileInput('fileS', 'singleDoc', '_pdfS');
-  setupFileInput('fileMH', 'mhsudDoc', '_pdfMH');
+window.addEventListener('DOMContentLoaded',function(){
+  setupFileInput('fileS','singleDoc','_pdfS');
+  setupFileInput('fileMH','mhsudDoc','_pdfMH');
 });
-
-document.addEventListener('DOMContentLoaded', function() {
-  const singleDoc = document.getElementById('singleDoc');
-  if (singleDoc) {
-    singleDoc.addEventListener('input', function() {
-      document.getElementById('sCC').textContent = this.value.length.toLocaleString() + ' chars';
-    });
-  }
+document.addEventListener('DOMContentLoaded',function(){
+  const singleDoc=document.getElementById('singleDoc');
+  if(singleDoc){singleDoc.addEventListener('input',function(){document.getElementById('sCC').textContent=this.value.length.toLocaleString()+' chars';});}
 });
-
 function loadSample(mode){
   if(mode==='single'){document.getElementById('singleDoc').value=SAMPLE1;document.getElementById('sCC').textContent=SAMPLE1.length+' chars'}
   else if(mode==='mhsud'){document.getElementById('mhsudDoc').value=SAMPLE1}
   else if(mode==='concurrent'){document.getElementById('concDoc1').value=SAMPLE1;document.getElementById('concDoc2').value=SAMPLE2}
   else if(mode==='batch'){
     document.getElementById('batchSlots').innerHTML='';bSlotCount=0;
-    addSlot('Patient A — Baker, Bradford',SAMPLE1);
-    addSlot('Patient B — Week 2 Progress',SAMPLE2);
-    addSlot('Patient C — Stable Outpatient','PATIENT: Jane M, DOB 06/15/1988\n\nWeekly outpatient. Mood stable, cravings 1/10. No withdrawal. Compliant with naltrexone 50mg. Weekly therapy and AA. Supportive family. Working part-time. UDS negative. Insight excellent.');
+    addSlot('Sample Patient A',SAMPLE1);
+    addSlot('Sample Patient B — Week 2 Progress',SAMPLE2);
+    addSlot('Sample Patient C — Stable Outpatient','PATIENT: Sample Patient C, DOB [REDACTED]\n\nWeekly outpatient. Mood stable, cravings 1/10. No withdrawal. Compliant with naltrexone 50mg. Weekly therapy and AA. Supportive family. Working part-time. UDS negative. Insight excellent.');
   }
 }
-
 function addSlot(label='',prefill=''){
   if(bSlotCount>=8)return;bSlotCount++;const i=bSlotCount;
   const div=document.createElement('div');div.id='bs-'+i;div.className='batch-slot';
   div.innerHTML='<div class="batch-slot-hdr"><input type="text" id="bl-'+i+'" value="'+(label||'Patient '+i)+'" style="flex:1" /><button class="btn btn-ghost btn-sm" onclick="document.getElementById(\'bs-'+i+'\').remove()">Remove</button></div><textarea id="bd-'+i+'" style="min-height:90px;font-size:12px">'+prefill+'</textarea>';
   document.getElementById('batchSlots').appendChild(div);
 }
-
 const LMSGS=['Parsing clinical documentation...','Mapping ASAM dimensional criteria...','Applying payer-specific requirements...','Evaluating authorization readiness...','Generating gap analysis...'];
 function startLoad(id){let i=0;const el=document.getElementById(id);if(!el)return null;el.textContent=LMSGS[0];return setInterval(function(){i=(i+1)%LMSGS.length;if(el)el.textContent=LMSGS[i]},2200)}
 function showLoader(id,show){const el=document.getElementById(id);if(el)el.style.display=show?'block':'none'}
-
 function buildSys(pKey,lKey,extra){
   extra=extra||'';
   const p=PAYERS[pKey]||PAYERS.sunshine;const l=LOCS[lKey]||LOCS.php;
   const dims=l.dims.map(function(d,i){return 'Dimension '+(i+1)+': '+d}).join('\n');
   return 'You are a behavioral health utilization review specialist with deep expertise in ASAM criteria and insurance prior authorization requirements.\nPAYER: '+p.name+' | FRAMEWORK: '+p.fw+' | CONTEXT: '+p.notes+'\nREQUESTED LOC: '+l.label+' ('+l.asam+')\nASAM DIMENSIONS:\n'+dims+'\n'+extra+'\nReturn ONLY valid JSON (no markdown): {"auth_score":number,"verdict":"likely_approved"|"likely_denied"|"insufficient_documentation"|"needs_supplementation","verdict_label":string,"summary":string,"met_count":number,"partial_count":number,"gap_count":number,"dimensions":[{"id":number,"name":string,"status":"met"|"partial"|"gap","finding":string,"recommendation":string}],"critical_gaps":[string],"payer_specific_issues":[string],"overall_recommendation":string}';
 }
-
 function buildMHSUDSys(pKey){
   const p=PAYERS[pKey]||PAYERS.sunshine;
   return 'You are a behavioral health utilization review specialist with expertise in both ASAM criteria (SUD) and InterQual/MCG criteria (Mental Health).\nPAYER: '+p.name+' | SUD FRAMEWORK: '+p.sud_fw+' | MH FRAMEWORK: '+p.mh_fw+' | PARITY CONTEXT: '+p.parity_note+'\nAnalyze the documentation and determine primary diagnosis type, then evaluate under both SUD and MH frameworks.\nReturn ONLY valid JSON (no markdown):\n{"primary_dx_type":"sud"|"mh"|"dual"|"unclear","primary_dx_confidence":"high"|"medium"|"low","primary_dx_rationale":string,"payer_applicable_framework":string,"parity_alert":boolean,"parity_alert_detail":string,"sud_analysis":{"auth_score":number,"recommended_loc":string,"verdict":"likely_approved"|"likely_denied"|"needs_supplementation"|"insufficient_documentation","verdict_label":string,"summary":string,"key_gaps":[string],"key_strengths":[string]},"mh_analysis":{"auth_score":number,"recommended_loc":string,"verdict":"likely_approved"|"likely_denied"|"needs_supplementation"|"insufficient_documentation","verdict_label":string,"summary":string,"key_gaps":[string],"key_strengths":[string]},"dual_diagnosis_note":string,"overall_recommendation":string,"framework_recommendation":string}';
 }
-
 async function callAPI(system,content,pdfBase64){
   const body={system:system,messages:[{role:'user',content:content}],max_tokens:4000};
   if(pdfBase64)body.pdf_base64=pdfBase64;
@@ -507,7 +486,6 @@ async function callAPI(system,content,pdfBase64){
   const txt=data.content.map(function(i){return i.text||''}).join('');
   return JSON.parse(txt.replace(/```json|```/g,'').trim());
 }
-
 async function runSingle(){
   const text=document.getElementById('singleDoc').value.trim();
   if(!text){alert('Please add clinical documentation first.');return}
@@ -521,7 +499,6 @@ async function runSingle(){
   }catch(e){clearInterval(t);showLoader('single-loading',false);document.getElementById('single-results').innerHTML='<div class="error-box">Analysis failed: '+e.message+'</div>'}
   document.getElementById('singleBtn').disabled=false;
 }
-
 async function runMHSUD(){
   const text=document.getElementById('mhsudDoc').value.trim();
   if(!text){alert('Please add clinical documentation first.');return}
@@ -535,7 +512,6 @@ async function runMHSUD(){
   }catch(e){clearInterval(t);showLoader('mhsud-loading',false);document.getElementById('mhsud-results').innerHTML='<div class="error-box">Analysis failed: '+e.message+'</div>'}
   document.getElementById('mhsudBtn').disabled=false;
 }
-
 async function runConcurrent(){
   const d1=document.getElementById('concDoc1').value.trim();
   const d2=document.getElementById('concDoc2').value.trim();
@@ -550,7 +526,6 @@ async function runConcurrent(){
   }catch(e){clearInterval(t);showLoader('conc-loading',false);document.getElementById('conc-results').innerHTML='<div class="error-box">Analysis failed: '+e.message+'</div>'}
   document.getElementById('concBtn').disabled=false;
 }
-
 async function runBatch(){
   const pKey=document.getElementById('batchPayer').value;
   const lKey=document.getElementById('batchLoc').value;
@@ -570,26 +545,22 @@ async function runBatch(){
   showLoader('batch-loading',false);renderBatch(results,pKey,lKey);
   document.getElementById('batchBtn').disabled=false;
 }
-
 function sc(s){return s>=70?'sd-high':s>=40?'sd-mid':'sd-low'}
 function vc(v){return{likely_approved:'vc-approved',likely_denied:'vc-denied',needs_supplementation:'vc-supp',insufficient_documentation:'vc-insuff'}[v]||'vc-supp'}
 function dc(s){return{met:'dot-g',partial:'dot-a',gap:'dot-r'}[s]}
 function bc(s){return{met:'b-met',partial:'b-par',gap:'b-gap'}[s]}
 function bl(s){return{met:'Met',partial:'Partial',gap:'Gap'}[s]}
-
 function renderDims(dims,prefix){
   return dims.map(function(dim,i){
     return '<div class="dim-row"><div class="dim-hdr" onclick="td(\''+prefix+i+'\')"><div class="dot '+dc(dim.status)+'"></div><div class="dim-name">Dim.'+dim.id+' — '+dim.name+'</div><span class="badge '+bc(dim.status)+'">'+bl(dim.status)+'</span><span class="chevron" id="cv-'+prefix+i+'">▼</span></div><div class="dim-body" id="db-'+prefix+i+'"><p>'+dim.finding+'</p><div class="rec-box"><strong>Add to documentation</strong>'+dim.recommendation+'</div></div></div>';
   }).join('');
 }
 function td(id){const b=document.getElementById('db-'+id),c=document.getElementById('cv-'+id);if(b){b.classList.toggle('open');if(c)c.textContent=b.classList.contains('open')?'▲':'▼'}}
-
 function renderMHSUD(d,pKey){
   const p=PAYERS[pKey]||PAYERS.sunshine;
   const dxChip={sud:'dx-sud',mh:'dx-mh',dual:'dx-dual',unclear:'dx-unclear'}[d.primary_dx_type]||'dx-unclear';
   const dxLabel={sud:'Primary SUD',mh:'Primary Mental Health',dual:'Dual Diagnosis',unclear:'Diagnosis Unclear'}[d.primary_dx_type]||'Unclear';
-  const s1=sc(d.sud_analysis.auth_score);
-  const s2=sc(d.mh_analysis.auth_score);
+  const s1=sc(d.sud_analysis.auth_score);const s2=sc(d.mh_analysis.auth_score);
   let h='<div class="panel"><div style="text-align:center;padding:.75rem 0 1rem"><span class="dx-chip '+dxChip+'">'+dxLabel+'</span><div style="font-size:12px;color:var(--ink3);font-family:var(--mono);margin-top:4px">'+p.name+' — MH vs SUD Framework Analysis</div><div style="font-size:11px;color:var(--ink4);margin-top:3px">'+d.primary_dx_rationale+'</div></div>';
   if(d.parity_alert){h+='<div class="parity-alert"><strong>Parity / Framework Alert</strong>'+d.parity_alert_detail+'</div>'}
   h+='<div style="margin-bottom:1rem"><div class="slabel">Applicable framework</div><div class="payer-info-bar"><strong>'+p.name+'</strong> will apply: '+d.payer_applicable_framework+'<br>'+d.framework_recommendation+'</div></div>';
@@ -606,7 +577,6 @@ function renderMHSUD(d,pKey){
   document.getElementById('mhsud-results').innerHTML=h;
   document.getElementById('mhsud-results').scrollIntoView({behavior:'smooth',block:'start'});
 }
-
 function renderSingle(d,pKey,lKey,originalText){
   const p=PAYERS[pKey]||PAYERS.sunshine;const l=LOCS[lKey]||LOCS.php;
   let h='<div class="panel"><div style="text-align:center;padding:.75rem 0 1rem"><div class="score-donut '+sc(d.auth_score)+'">'+Math.round(d.auth_score)+'%</div><span class="verdict-chip '+vc(d.verdict)+'">'+d.verdict_label+'</span><div style="font-size:11px;color:var(--ink4);font-family:var(--mono);margin-top:4px">'+p.name+' · '+l.label+' ('+l.asam+')</div></div>';
@@ -622,7 +592,6 @@ function renderSingle(d,pKey,lKey,originalText){
   document.getElementById('single-results').innerHTML=h;
   document.getElementById('single-results').scrollIntoView({behavior:'smooth',block:'start'});
 }
-
 function renderConcurrent(d,pKey,lKey){
   const p=PAYERS[pKey]||PAYERS.sunshine;const l=LOCS[lKey]||LOCS.php;
   const cs=d.continued_stay_assessment;
@@ -636,7 +605,6 @@ function renderConcurrent(d,pKey,lKey){
   document.getElementById('conc-results').innerHTML=h;
   document.getElementById('conc-results').scrollIntoView({behavior:'smooth',block:'start'});
 }
-
 function renderBatch(results,pKey,lKey){
   const p=PAYERS[pKey]||PAYERS.sunshine;const l=LOCS[lKey]||LOCS.php;
   const valid=results.filter(function(r){return r.data});
@@ -654,7 +622,6 @@ function renderBatch(results,pKey,lKey){
   document.getElementById('batch-results').innerHTML=h;
   document.getElementById('batch-results').scrollIntoView({behavior:'smooth',block:'start'});
 }
-
 async function draftRemediation(d,originalText,pKey,lKey,btn,targetId){
   const gaps=d.dimensions.filter(function(x){return x.status==='gap'||x.status==='partial'});
   if(!gaps.length){alert('No gaps found — documentation appears sufficient.');return}
@@ -672,12 +639,10 @@ async function draftRemediation(d,originalText,pKey,lKey,btn,targetId){
   }catch(e){alert('Remediation failed: '+e.message)}
   btn.disabled=false;btn.textContent=orig;
 }
-
 function copyRem(id){
   const el=document.getElementById(id);if(!el)return;
   navigator.clipboard.writeText(el.innerText||el.textContent).then(function(){const b=event.target;const o=b.textContent;b.textContent='Copied!';setTimeout(function(){b.textContent=o},2000)}).catch(function(){alert('Please select and copy manually.')});
 }
-
 function doExport(mode){
   var lines=['AUTH.REVIEW — Prior Authorization Review Platform','Generated: '+new Date().toLocaleString(),''];
   if(mode==='single'&&window._sData){var r=window._sData;lines=lines.concat(buildReport(r.d,PAYERS[r.pKey]||PAYERS.sunshine,LOCS[r.lKey]||LOCS.php,'Single Document Review'))}
@@ -702,7 +667,6 @@ function doExport(mode){
   else{alert('No results to export yet.');return}
   openPrint('AUTH.REVIEW Report',lines.join('\n'));
 }
-
 function buildReport(d,p,l,heading){
   var lines=[heading,'='.repeat(60),'Payer: '+p.name,'LOC: '+l.label+' ('+l.asam+')','Framework: '+p.fw,'','SCORE: '+Math.round(d.auth_score)+'% — '+d.verdict_label,'','SUMMARY: '+d.summary,'','DIMENSIONS:'];
   d.dimensions.forEach(function(dim){lines.push('Dim.'+dim.id+' '+dim.name+': ['+dim.status.toUpperCase()+']');lines.push('  '+dim.finding);lines.push('  Add: '+dim.recommendation);lines.push('')});
@@ -711,14 +675,12 @@ function buildReport(d,p,l,heading){
   lines.push('RECOMMENDATION: '+d.overall_recommendation);
   return lines;
 }
-
 function openPrint(title,content){
   var w=window.open('','_blank','width=820,height=700');
   if(!w){alert('Please allow popups to export.');return}
   w.document.write('<!DOCTYPE html><html><head><title>'+title+'</title><style>body{font-family:\'Courier New\',monospace;font-size:12px;line-height:1.7;padding:40px;max-width:740px;margin:0 auto;color:#111}h1{font-size:14px;font-family:sans-serif;margin-bottom:16px}pre{white-space:pre-wrap;word-break:break-word}.np{margin-bottom:16px}button{font-family:monospace;padding:8px 16px;cursor:pointer;border:1px solid #ccc;border-radius:4px;background:#f5f5f5;margin-right:8px}@media print{.np{display:none}}</style></head><body><div class="np"><button onclick="window.print()">Print / Save as PDF</button><button onclick="navigator.clipboard.writeText(document.getElementById(\'rc\').innerText).then(()=>alert(\'Copied!\'))">Copy text</button></div><h1>'+title+'</h1><pre id="rc">'+content.replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</pre></body></html>');
   w.document.close();
 }
-
 addSlot();
 </script>
 </body>
