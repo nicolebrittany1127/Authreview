@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AuthAlly — Sign in</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body { font-family: system-ui, sans-serif; background:#f5f5f7; }
+    .box { max-width:360px; margin:80px auto; background:#fff; padding:32px;
+           border-radius:12px; box-shadow:0 2px 12px rgba(0,0,0,.08); }
+    h1 { font-size:20px; margin:0 0 20px; }
+    input { width:100%; padding:10px; margin-bottom:12px; border:1px solid #ccc;
+            border-radius:6px; box-sizing:border-box; }
+    button { width:100%; padding:10px; border:0; border-radius:6px;
+             background:#1a1a2e; color:#fff; font-size:15px; cursor:pointer; }
+    button:disabled { opacity:.6; cursor:default; }
+    .err { color:crimson; font-size:14px; margin-bottom:12px; min-height:18px; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h1>AuthAlly — Sign in</h1>
+    <div class="err" id="err"></div>
+    <input type="email" id="email" placeholder="Email" autocomplete="username" />
+    <input type="password" id="password" placeholder="Password" autocomplete="current-password" />
+    <button id="btn">Sign in</button>
+  </div>
+
+  <script>
+    const SUPABASE_URL = 'https://bfxlalbdaesoegvyyffd.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_w9__fwjintmEx8VPmdYuLA_VqMxtMoo';
+    const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const btn = document.getElementById('btn');
+    const errEl = document.getElementById('err');
+
+    async function signIn() {
+      errEl.textContent = '';
+      btn.disabled = true;
+      btn.textContent = 'Signing in…';
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+      btn.disabled = false;
+      btn.textContent = 'Sign in';
+      if (error) { errEl.textContent = error.message; return; }
+      window.location.href = '/';   // main app after login
+    }
+
+    btn.addEventListener('click', signIn);
+    document.getElementById('password').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') signIn();
+    });
+  </script>
+</body>
+</html>
