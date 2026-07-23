@@ -168,7 +168,7 @@ input[type="file"]{display:none}
 <div class="container">
   <div class="hero">
     <h1>Prior <strong>Authorization</strong> Review</h1>
-    <p>Analyze clinical documentation against ASAM and InterQual criteria across 14 payers, 10 levels of care, and both MH and SUD frameworks.</p>
+    <p>Analyze clinical documentation against ASAM and InterQual criteria across 29 payers in Florida, Maryland &amp; Virginia, 10 levels of care, and both MH and SUD frameworks.</p>
     <div class="mode-bar">
       <button class="mode-tab active" onclick="setMode('single',this)">Single Review</button>
       <button class="mode-tab" onclick="setMode('mhsud',this)">MH vs SUD</button>
@@ -179,31 +179,9 @@ input[type="file"]{display:none}
   <div class="page active" id="mode-single">
     <div class="panel">
       <div class="panel-title">Payer selection</div>
-      <div class="pgroup-label">Florida Medicaid Managed Care</div>
-      <div class="payer-scroll">
-        <span class="ptag sel" data-p="sunshine" onclick="sp(this)">Sunshine Health</span>
-        <span class="ptag" data-p="aetna_med" onclick="sp(this)">Aetna Better Health FL</span>
-        <span class="ptag" data-p="molina" onclick="sp(this)">Molina FL</span>
-        <span class="ptag" data-p="simply" onclick="sp(this)">Simply Healthcare</span>
-        <span class="ptag" data-p="humana_med" onclick="sp(this)">Humana Medicaid FL</span>
-        <span class="ptag" data-p="united_med" onclick="sp(this)">UHC Community FL</span>
-      </div>
-      <div class="pgroup-label">Commercial / Medicare Advantage</div>
-      <div class="payer-scroll">
-        <span class="ptag" data-p="bcbs" onclick="sp(this)">BCBS Florida</span>
-        <span class="ptag" data-p="cigna" onclick="sp(this)">Cigna</span>
-        <span class="ptag" data-p="aetna_comm" onclick="sp(this)">Aetna Commercial</span>
-        <span class="ptag" data-p="uhc_comm" onclick="sp(this)">UnitedHealthcare</span>
-        <span class="ptag" data-p="humana_comm" onclick="sp(this)">Humana Commercial</span>
-        <span class="ptag" data-p="magellan" onclick="sp(this)">Magellan Health</span>
-        <span class="ptag" data-p="carelon" onclick="sp(this)">Carelon / Beacon</span>
-        <span class="ptag" data-p="tricare" onclick="sp(this)">TRICARE</span>
-      </div>
-      <div class="pgroup-label">Medicare</div>
-      <div class="payer-scroll">
-        <span class="ptag" data-p="medicare" onclick="sp(this)">Traditional Medicare</span>
-        <span class="ptag" data-p="medicare_adv" onclick="sp(this)">Medicare Advantage</span>
-      </div>
+      <div class="pgroup-label">State</div>
+      <div class="payer-scroll" id="stateTabs-single"></div>
+      <div id="payerPanelSingle"></div>
     </div>
     <div class="panel">
       <div class="panel-title">Level of care</div>
@@ -241,26 +219,9 @@ input[type="file"]{display:none}
   <div class="page" id="mode-mhsud">
     <div class="panel">
       <div class="panel-title">Payer selection</div>
-      <div class="pgroup-label">Florida Medicaid</div>
-      <div class="payer-scroll">
-        <span class="ptag sel" data-pm="sunshine" onclick="spm(this)">Sunshine Health</span>
-        <span class="ptag" data-pm="aetna_med" onclick="spm(this)">Aetna Better Health FL</span>
-        <span class="ptag" data-pm="molina" onclick="spm(this)">Molina FL</span>
-        <span class="ptag" data-pm="simply" onclick="spm(this)">Simply Healthcare</span>
-        <span class="ptag" data-pm="humana_med" onclick="spm(this)">Humana Medicaid FL</span>
-        <span class="ptag" data-pm="united_med" onclick="spm(this)">UHC Community FL</span>
-      </div>
-      <div class="pgroup-label">Commercial / Medicare</div>
-      <div class="payer-scroll">
-        <span class="ptag" data-pm="bcbs" onclick="spm(this)">BCBS Florida</span>
-        <span class="ptag" data-pm="cigna" onclick="spm(this)">Cigna</span>
-        <span class="ptag" data-pm="uhc_comm" onclick="spm(this)">UnitedHealthcare</span>
-        <span class="ptag" data-pm="aetna_comm" onclick="spm(this)">Aetna Commercial</span>
-        <span class="ptag" data-pm="humana_comm" onclick="spm(this)">Humana Commercial</span>
-        <span class="ptag" data-pm="magellan" onclick="spm(this)">Magellan Health</span>
-        <span class="ptag" data-pm="carelon" onclick="spm(this)">Carelon / Beacon</span>
-        <span class="ptag" data-pm="medicare" onclick="spm(this)">Medicare</span>
-      </div>
+      <div class="pgroup-label">State</div>
+      <div class="payer-scroll" id="stateTabs-mhsud"></div>
+      <div id="payerPanelMHSUD"></div>
     </div>
     <div class="panel">
       <div class="panel-title">Clinical documentation</div>
@@ -282,16 +243,9 @@ input[type="file"]{display:none}
   <div class="page" id="mode-concurrent">
     <div class="panel">
       <div class="panel-title">Payer &amp; level of care</div>
-      <div class="payer-scroll" id="concPayerWrap">
-        <span class="ptag sel" data-p2="sunshine" onclick="sp2(this)">Sunshine Health</span>
-        <span class="ptag" data-p2="aetna_med" onclick="sp2(this)">Aetna Better Health FL</span>
-        <span class="ptag" data-p2="molina" onclick="sp2(this)">Molina FL</span>
-        <span class="ptag" data-p2="simply" onclick="sp2(this)">Simply Healthcare</span>
-        <span class="ptag" data-p2="bcbs" onclick="sp2(this)">BCBS Florida</span>
-        <span class="ptag" data-p2="cigna" onclick="sp2(this)">Cigna</span>
-        <span class="ptag" data-p2="uhc_comm" onclick="sp2(this)">UnitedHealthcare</span>
-        <span class="ptag" data-p2="medicare" onclick="sp2(this)">Medicare</span>
-      </div>
+      <div class="pgroup-label">State</div>
+      <div class="payer-scroll" id="stateTabs-concurrent"></div>
+      <div id="payerPanelConcurrent"></div>
       <div style="margin-top:10px">
         <div class="loc-grid" id="concLocWrap">
           <span class="ltag" data-l2="res_hi" onclick="sl2(this)"><span class="lname">Res High</span><span class="lasam">3.5</span></span>
@@ -324,22 +278,7 @@ input[type="file"]{display:none}
       <div class="panel-title">Payer &amp; level of care</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
         <div><div class="slabel">Payer</div>
-        <select id="batchPayer">
-          <option value="sunshine">Sunshine Health (FL Medicaid)</option>
-          <option value="aetna_med">Aetna Better Health FL</option>
-          <option value="molina">Molina FL</option>
-          <option value="simply">Simply Healthcare FL</option>
-          <option value="bcbs">BCBS Florida</option>
-          <option value="cigna">Cigna</option>
-          <option value="aetna_comm">Aetna Commercial</option>
-          <option value="uhc_comm">UnitedHealthcare</option>
-          <option value="humana_comm">Humana Commercial</option>
-          <option value="magellan">Magellan Health</option>
-          <option value="carelon">Carelon / Beacon</option>
-          <option value="tricare">TRICARE</option>
-          <option value="medicare">Traditional Medicare</option>
-          <option value="medicare_adv">Medicare Advantage</option>
-        </select></div>
+        <select id="batchPayer"></select></div>
         <div><div class="slabel">Level of Care</div>
         <select id="batchLoc">
           <option value="php">PHP — ASAM 2.5</option>
@@ -371,23 +310,54 @@ input[type="file"]{display:none}
 <script>
 // ALL PATIENT DATA BELOW IS FICTIONAL DUMMY DATA — NO REAL PHI
 const PAYERS={
-  sunshine:{name:'Sunshine Health (FL Medicaid)',fw:'ASAM Criteria (SUD) / InterQual (MH)',sud_fw:'ASAM Criteria',mh_fw:'InterQual',notes:'PHP is an In Lieu of Service. ASAM 2.5 for primary SUD; InterQual for primary MH. Extended stay fax form required.',parity_note:'Sunshine Health uses ASAM for SUD and InterQual for MH. Primary diagnosis determines which framework applies.'},
-  aetna_med:{name:'Aetna Better Health FL',fw:'ASAM Criteria / MCG',sud_fw:'ASAM Criteria',mh_fw:'MCG (Milliman)',notes:'ASAM for SUD, MCG for MH. Bio-psychosocial assessment required.',parity_note:'Aetna applies ASAM for SUD and MCG for MH.'},
-  molina:{name:'Molina Healthcare FL',fw:'ASAM / InterQual',sud_fw:'ASAM Criteria',mh_fw:'InterQual',notes:'AHCA-aligned. ASAM for SUD, InterQual for MH.',parity_note:'Primary diagnosis drives which framework is applied.'},
-  simply:{name:'Simply Healthcare FL',fw:'ASAM Criteria',sud_fw:'ASAM Criteria',mh_fw:'ASAM / DCF Guidelines',notes:'DCF-aligned. Strong emphasis on Dimensions 5 and 6.',parity_note:'Simply Healthcare primarily uses ASAM criteria.'},
-  humana_med:{name:'Humana Medicaid FL',fw:'ASAM / InterQual',sud_fw:'ASAM Criteria',mh_fw:'InterQual',notes:'Comprehensive bio-psychosocial assessment required.',parity_note:'Humana uses ASAM for SUD and InterQual for MH.'},
-  united_med:{name:'UHC Community Plan FL',fw:'Optum / ASAM 4th Ed.',sud_fw:'ASAM 4th Edition',mh_fw:'Optum / InterQual',notes:'Optum manages BH. ASAM 4th edition.',parity_note:'UHC/Optum uses ASAM 4th edition for SUD and Optum guidelines for MH.'},
-  bcbs:{name:'BCBS Florida / Florida Blue',fw:'MCG Guidelines',sud_fw:'MCG (SUD)',mh_fw:'MCG (Psychiatric)',notes:'Uses MCG guidelines for both SUD and MH.',parity_note:'BCBS applies MCG guidelines for both but uses different MCG criteria sets.'},
-  cigna:{name:'Cigna Behavioral Health',fw:'ASAM Criteria',sud_fw:'ASAM Criteria',mh_fw:'Cigna Coverage Policy',notes:'Dimension 3 and 5 weighted heavily.',parity_note:'Cigna uses ASAM for SUD and internal coverage policies for MH.'},
-  aetna_comm:{name:'Aetna (Commercial)',fw:'ASAM / MCG',sud_fw:'ASAM Criteria',mh_fw:'MCG (Milliman)',notes:'ASAM for SUD, MCG for MH.',parity_note:'Federal Mental Health Parity Act applies.'},
-  uhc_comm:{name:'UnitedHealthcare (Commercial)',fw:'Optum / ASAM 4th Ed.',sud_fw:'ASAM 4th Edition',mh_fw:'Optum Behavioral Health Guidelines',notes:'Person-centered documentation required.',parity_note:'Federal Mental Health Parity Act applies.'},
-  humana_comm:{name:'Humana (Commercial)',fw:'ASAM / InterQual',sud_fw:'ASAM Criteria',mh_fw:'InterQual Behavioral Health',notes:'Psychiatric evaluation and medication management required.',parity_note:'Humana applies ASAM for SUD and InterQual BH for MH.'},
-  magellan:{name:'Magellan Health',fw:'ASAM Criteria',sud_fw:'ASAM Criteria',mh_fw:'Magellan Clinical Guidelines',notes:'Measurable goals and demonstrated progress required.',parity_note:'Magellan uses ASAM for SUD and internal clinical guidelines for MH.'},
-  carelon:{name:'Carelon / Beacon',fw:'ASAM 4th Ed.',sud_fw:'ASAM 4th Edition',mh_fw:'InterQual / Carelon BH Guidelines',notes:'Bio-psychosocial assessment within 24hrs required.',parity_note:'Carelon uses ASAM 4th edition for SUD.'},
-  tricare:{name:'TRICARE',fw:'ASAM / VA-DoD CPG',sud_fw:'ASAM / VA-DoD CPG',mh_fw:'VA-DoD CPG',notes:'20+ hrs/week of structured programming required.',parity_note:'VA/DoD Clinical Practice Guidelines apply to both MH and SUD.'},
-  medicare:{name:'Traditional Medicare',fw:'CMS / InterQual',sud_fw:'CMS / InterQual',mh_fw:'CMS / InterQual',notes:'Physician certification required. 20+ hrs/week therapy.',parity_note:'Medicare uses InterQual for both MH and SUD PHP.'},
-  medicare_adv:{name:'Medicare Advantage',fw:'CMS baseline + plan-specific',sud_fw:'ASAM / CMS',mh_fw:'InterQual / CMS',notes:'Must meet CMS minimum criteria.',parity_note:'MA plans must meet CMS minimum parity requirements.'}
+  // ================= FLORIDA =================
+  sunshine:{name:'Sunshine Health (FL Medicaid)',state:'FL',group:'Medicaid Managed Care',fw:'ASAM Criteria (SUD) / InterQual (MH)',sud_fw:'ASAM Criteria',mh_fw:'InterQual',notes:'PHP is an In Lieu of Service. ASAM 2.5 for primary SUD; InterQual for primary MH. Extended stay fax form required.',parity_note:'Sunshine Health uses ASAM for SUD and InterQual for MH. Primary diagnosis determines which framework applies.'},
+  aetna_med:{name:'Aetna Better Health FL',state:'FL',group:'Medicaid Managed Care',fw:'ASAM Criteria / MCG',sud_fw:'ASAM Criteria',mh_fw:'MCG (Milliman)',notes:'ASAM for SUD, MCG for MH. Bio-psychosocial assessment required.',parity_note:'Aetna applies ASAM for SUD and MCG for MH.'},
+  molina:{name:'Molina Healthcare FL',state:'FL',group:'Medicaid Managed Care',fw:'ASAM / InterQual',sud_fw:'ASAM Criteria',mh_fw:'InterQual',notes:'AHCA-aligned. ASAM for SUD, InterQual for MH.',parity_note:'Primary diagnosis drives which framework is applied.'},
+  simply:{name:'Simply Healthcare FL',state:'FL',group:'Medicaid Managed Care',fw:'ASAM Criteria',sud_fw:'ASAM Criteria',mh_fw:'ASAM / DCF Guidelines',notes:'DCF-aligned. Strong emphasis on Dimensions 5 and 6.',parity_note:'Simply Healthcare primarily uses ASAM criteria.'},
+  humana_med:{name:'Humana Medicaid FL',state:'FL',group:'Medicaid Managed Care',fw:'ASAM / InterQual',sud_fw:'ASAM Criteria',mh_fw:'InterQual',notes:'Comprehensive bio-psychosocial assessment required.',parity_note:'Humana uses ASAM for SUD and InterQual for MH.'},
+  united_med:{name:'UHC Community Plan FL',state:'FL',group:'Medicaid Managed Care',fw:'Optum / ASAM 4th Ed.',sud_fw:'ASAM 4th Edition',mh_fw:'Optum / InterQual',notes:'Optum manages BH. ASAM 4th edition.',parity_note:'UHC/Optum uses ASAM 4th edition for SUD and Optum guidelines for MH.'},
+  bcbs:{name:'BCBS Florida / Florida Blue',state:'FL',group:'Commercial / Medicare Advantage',fw:'MCG Guidelines',sud_fw:'MCG (SUD)',mh_fw:'MCG (Psychiatric)',notes:'Uses MCG guidelines for both SUD and MH.',parity_note:'BCBS applies MCG guidelines for both but uses different MCG criteria sets.'},
+  cigna:{name:'Cigna Behavioral Health',state:'FL',group:'Commercial / Medicare Advantage',fw:'ASAM Criteria',sud_fw:'ASAM Criteria',mh_fw:'Cigna Coverage Policy',notes:'Dimension 3 and 5 weighted heavily.',parity_note:'Cigna uses ASAM for SUD and internal coverage policies for MH.'},
+  aetna_comm:{name:'Aetna (Commercial)',state:'FL',group:'Commercial / Medicare Advantage',fw:'ASAM / MCG',sud_fw:'ASAM Criteria',mh_fw:'MCG (Milliman)',notes:'ASAM for SUD, MCG for MH.',parity_note:'Federal Mental Health Parity Act applies.'},
+  uhc_comm:{name:'UnitedHealthcare (Commercial)',state:'FL',group:'Commercial / Medicare Advantage',fw:'Optum / ASAM 4th Ed.',sud_fw:'ASAM 4th Edition',mh_fw:'Optum Behavioral Health Guidelines',notes:'Person-centered documentation required.',parity_note:'Federal Mental Health Parity Act applies.'},
+  humana_comm:{name:'Humana (Commercial)',state:'FL',group:'Commercial / Medicare Advantage',fw:'ASAM / InterQual',sud_fw:'ASAM Criteria',mh_fw:'InterQual Behavioral Health',notes:'Psychiatric evaluation and medication management required.',parity_note:'Humana applies ASAM for SUD and InterQual BH for MH.'},
+  magellan:{name:'Magellan Health',state:'FL',group:'Commercial / Medicare Advantage',fw:'ASAM Criteria',sud_fw:'ASAM Criteria',mh_fw:'Magellan Clinical Guidelines',notes:'Measurable goals and demonstrated progress required.',parity_note:'Magellan uses ASAM for SUD and internal clinical guidelines for MH.'},
+  carelon:{name:'Carelon / Beacon',state:'FL',group:'Commercial / Medicare Advantage',fw:'ASAM 4th Ed.',sud_fw:'ASAM 4th Edition',mh_fw:'InterQual / Carelon BH Guidelines',notes:'Bio-psychosocial assessment within 24hrs required.',parity_note:'Carelon uses ASAM 4th edition for SUD.'},
+  tricare:{name:'TRICARE',state:'FL',group:'Commercial / Medicare Advantage',fw:'ASAM / VA-DoD CPG',sud_fw:'ASAM / VA-DoD CPG',mh_fw:'VA-DoD CPG',notes:'20+ hrs/week of structured programming required.',parity_note:'VA/DoD Clinical Practice Guidelines apply to both MH and SUD.'},
+  medicare:{name:'Traditional Medicare',state:'FL',group:'Medicare',fw:'CMS / InterQual',sud_fw:'CMS / InterQual',mh_fw:'CMS / InterQual',notes:'Physician certification required. 20+ hrs/week therapy.',parity_note:'Medicare uses InterQual for both MH and SUD PHP.'},
+  medicare_adv:{name:'Medicare Advantage',state:'FL',group:'Medicare',fw:'CMS baseline + plan-specific',sud_fw:'ASAM / CMS',mh_fw:'InterQual / CMS',notes:'Must meet CMS minimum criteria.',parity_note:'MA plans must meet CMS minimum parity requirements.'},
+
+  // ================= MARYLAND =================
+  // HealthChoice Medicaid MCOs. Maryland carves mental health OUT of the MCO entirely — it is
+  // administered through the state's Public Behavioral Health System and reimbursed fee-for-service.
+  // Only SUD authorization runs through these MCOs (ASAM Criteria, per COMAR). VERIFY each plan's
+  // exact UM vendor/version with its current provider manual before relying on this clinically.
+  aetna_md:{name:'Aetna Better Health of Maryland',state:'MD',group:'Medicaid Managed Care (HealthChoice)',fw:'ASAM Criteria (SUD only — MH carved out)',sud_fw:'ASAM Criteria',mh_fw:'N/A — carved out to MD Public Behavioral Health System (FFS)',mh_carveout:true,notes:'VERIFY plan-specific UM vendor/version. SUD authorization follows ASAM per COMAR; mental health is not authorized through this MCO.',parity_note:'Maryland carves mental health out of all HealthChoice MCOs; only SUD is authorized here.'},
+  wellpoint_md:{name:'Wellpoint Maryland (formerly Amerigroup Community Care)',state:'MD',group:'Medicaid Managed Care (HealthChoice)',fw:'ASAM Criteria (SUD only — MH carved out)',sud_fw:'ASAM Criteria',mh_fw:'N/A — carved out to MD Public Behavioral Health System (FFS)',mh_carveout:true,notes:'VERIFY plan-specific UM vendor/version with current provider manual.',parity_note:'Maryland carves mental health out of all HealthChoice MCOs; only SUD is authorized here.'},
+  carefirst_md:{name:'CareFirst Community Health Plan Maryland',state:'MD',group:'Medicaid Managed Care (HealthChoice)',fw:'ASAM Criteria (SUD only — MH carved out)',sud_fw:'ASAM Criteria',mh_fw:'N/A — carved out to MD Public Behavioral Health System (FFS)',mh_carveout:true,notes:'VERIFY plan-specific UM vendor/version with current provider manual.',parity_note:'Maryland carves mental health out of all HealthChoice MCOs; only SUD is authorized here.'},
+  jai_md:{name:'Jai Medical Systems',state:'MD',group:'Medicaid Managed Care (HealthChoice)',fw:'ASAM Criteria (SUD only — MH carved out)',sud_fw:'ASAM Criteria',mh_fw:'N/A — carved out to MD Public Behavioral Health System (FFS)',mh_carveout:true,notes:'VERIFY plan-specific UM vendor/version with current provider manual.',parity_note:'Maryland carves mental health out of all HealthChoice MCOs; only SUD is authorized here.'},
+  mpc_md:{name:'Maryland Physicians Care',state:'MD',group:'Medicaid Managed Care (HealthChoice)',fw:'ASAM Criteria (SUD only — MH carved out)',sud_fw:'ASAM Criteria',mh_fw:'N/A — carved out to MD Public Behavioral Health System (FFS)',mh_carveout:true,notes:'VERIFY plan-specific UM vendor/version with current provider manual.',parity_note:'Maryland carves mental health out of all HealthChoice MCOs; only SUD is authorized here.'},
+  medstar_md:{name:'MedStar Family Choice',state:'MD',group:'Medicaid Managed Care (HealthChoice)',fw:'ASAM Criteria (SUD only — MH carved out)',sud_fw:'ASAM Criteria',mh_fw:'N/A — carved out to MD Public Behavioral Health System (FFS)',mh_carveout:true,notes:'VERIFY plan-specific UM vendor/version with current provider manual.',parity_note:'Maryland carves mental health out of all HealthChoice MCOs; only SUD is authorized here.'},
+  priority_md:{name:'Priority Partners',state:'MD',group:'Medicaid Managed Care (HealthChoice)',fw:'ASAM Criteria (SUD only — MH carved out)',sud_fw:'ASAM Criteria',mh_fw:'N/A — carved out to MD Public Behavioral Health System (FFS)',mh_carveout:true,notes:'VERIFY plan-specific UM vendor/version with current provider manual.',parity_note:'Maryland carves mental health out of all HealthChoice MCOs; only SUD is authorized here.'},
+  uhc_md:{name:'UnitedHealthcare Community Plan of Maryland',state:'MD',group:'Medicaid Managed Care (HealthChoice)',fw:'ASAM Criteria (SUD only — MH carved out)',sud_fw:'ASAM Criteria',mh_fw:'N/A — carved out to MD Public Behavioral Health System (FFS)',mh_carveout:true,notes:'VERIFY plan-specific UM vendor/version with current provider manual.',parity_note:'Maryland carves mental health out of all HealthChoice MCOs; only SUD is authorized here.'},
+
+  // ================= VIRGINIA =================
+  // Cardinal Care Medicaid MCOs. Virginia's ARTS program state-mandates ASAM Criteria (3rd Edition)
+  // for SUD service authorization statewide, and MCOs administer MH and SUD together (no carve-out,
+  // unlike Maryland). VERIFY each plan's specific MH UM vendor with its current provider manual.
+  aetna_va:{name:'Aetna Better Health of Virginia',state:'VA',group:'Medicaid Managed Care (Cardinal Care)',fw:'ASAM Criteria (ARTS — SUD) / MH criteria to verify',sud_fw:'ASAM Criteria (3rd Ed., ARTS Program)',mh_fw:'VERIFY — DMAS Mental Health Services criteria',notes:'Virginia\'s ARTS program mandates ASAM 3rd Edition for all SUD service authorizations statewide. MH is NOT carved out — confirm this plan\'s specific MH UM vendor.',parity_note:'Cardinal Care MCOs administer MH and SUD together, unlike Maryland.'},
+  anthem_va:{name:'Anthem HealthKeepers Plus',state:'VA',group:'Medicaid Managed Care (Cardinal Care)',fw:'ASAM Criteria (ARTS — SUD) / MH criteria to verify',sud_fw:'ASAM Criteria (3rd Ed., ARTS Program)',mh_fw:'VERIFY — DMAS Mental Health Services criteria',notes:'Same statewide ASAM/ARTS mandate applies. Confirm this plan\'s specific MH UM vendor.',parity_note:'Cardinal Care MCOs administer MH and SUD together, unlike Maryland.'},
+  humana_va:{name:'Humana Healthy Horizons in Virginia',state:'VA',group:'Medicaid Managed Care (Cardinal Care)',fw:'ASAM Criteria (ARTS — SUD) / MH criteria to verify',sud_fw:'ASAM Criteria (3rd Ed., ARTS Program)',mh_fw:'VERIFY — DMAS Mental Health Services criteria',notes:'Newest Cardinal Care MCO — replaced Molina effective July 2025. Confirm this plan\'s specific MH UM vendor.',parity_note:'Cardinal Care MCOs administer MH and SUD together, unlike Maryland.'},
+  sentara_va:{name:'Sentara Health Plans (Optima Health)',state:'VA',group:'Medicaid Managed Care (Cardinal Care)',fw:'ASAM Criteria (ARTS — SUD) / MH criteria to verify',sud_fw:'ASAM Criteria (3rd Ed., ARTS Program)',mh_fw:'VERIFY — DMAS Mental Health Services criteria',notes:'Same statewide ASAM/ARTS mandate applies. Confirm this plan\'s specific MH UM vendor.',parity_note:'Cardinal Care MCOs administer MH and SUD together, unlike Maryland.'},
+  uhc_va:{name:'UnitedHealthcare Community Plan of Virginia',state:'VA',group:'Medicaid Managed Care (Cardinal Care)',fw:'ASAM Criteria (ARTS — SUD) / MH criteria to verify',sud_fw:'ASAM Criteria (3rd Ed., ARTS Program)',mh_fw:'VERIFY — DMAS Mental Health Services criteria',notes:'Same statewide ASAM/ARTS mandate applies. Confirm this plan\'s specific MH UM vendor.',parity_note:'Cardinal Care MCOs administer MH and SUD together, unlike Maryland.'}
 };
+const STATE_LABELS={FL:'Florida',MD:'Maryland',VA:'Virginia'};
+function payersForState(state){
+  return Object.keys(PAYERS).filter(function(k){return PAYERS[k].state===state}).map(function(k){
+    return Object.assign({key:k},PAYERS[k]);
+  });
+}
 const LOCS={
   detox_med:{label:'Medical Detox',asam:'ASAM 4-WM',dims:['Severe withdrawal requiring 24hr medical management','Significant medical complications (cardiac, hepatic, seizure risk)','Psychiatric stability sufficient for medically supervised detox','Willing to engage in medically supervised detox','High risk of life-threatening complications without hospital-level monitoring','Environment unsafe or patient unable to self-monitor']},
   detox_res:{label:'Residential Detox',asam:'ASAM 3.2-WM',dims:['Moderate-severe withdrawal needing 24hr oversight','Biomedical conditions manageable without hospital-level care','Sufficient psychiatric stability for residential detox','Engaged in detox and transition planning','Risk of complications without residential support','Lacks safe home environment for ambulatory detox']},
@@ -403,17 +373,64 @@ const LOCS={
 const SAMPLE1=`PATIENT: John Sample, DOB [REDACTED]\nADMISSION: [DATE] | Sample Treatment Center\n\nMedical Progress Note — [DATE]\nProvider: Jane Smith, APRN\n\nPatient is a middle-aged male presenting for weekly medication management. Alert, cooperative, well-groomed. Mood "good overall" with some anxiety. Thought processes coherent. Denied SI, HI, withdrawal symptoms. Good insight. Compliant with treatment plan.\n\nPHYSICAL: BP 142/88, HR 52, RR 22. Regular rate. No SOB. Normal gait. No edema. No focal deficits.\n\nMSE: Calm, cooperative. Congruent affect. Fluent speech. Logical thought. Denies SI/HI/AH/VH. Oriented x4. Insight good.\n\nMEDS: Buprenorphine-naloxone 8-2mg SL daily, fluoxetine 20mg, gabapentin 300mg TID, olanzapine 10mg QHS. NKA.\n\nPLAN: Continue medications. Monitor progress. Encourage therapy. Follow up weekly.`;
 const SAMPLE2=`PATIENT: John Sample — Week 2 Progress Note [DATE]\n\nContinues in residential treatment. Attended all groups. Reports cravings 4/10 evenings. Opening up about family conflict as relapse driver. Sleep disrupted despite olanzapine.\n\nMSE: Alert and oriented. Mood "frustrated but hopeful." Congruent affect. Denies SI/HI. No withdrawal. Insight fair and improving.\n\nExpressed ambivalence about length of stay. MI utilized. Agreed to remain through week 4.\n\nDRUG SCREEN: Negative except prescribed buprenorphine.\n\nPLAN: Continue meds. Increase individual therapy to 3x/week. Family session scheduled. Monitor sleep and cravings.`;
 let selP='sunshine',selL='php',selP2='sunshine',selL2='php',selPM='sunshine';
+let stateSingle='FL',stateMHSUD='FL',stateConcurrent='FL';
 let bSlotCount=0;
 function setMode(m,el){
   document.querySelectorAll('.mode-tab').forEach(t=>t.classList.remove('active'));
   el.classList.add('active');
   ['single','mhsud','concurrent','batch'].forEach(x=>document.getElementById('mode-'+x).classList.toggle('active',x===m));
 }
-function sp(el){document.querySelectorAll('#mode-single .ptag').forEach(t=>t.classList.remove('sel'));el.classList.add('sel');selP=el.dataset.p}
+// Rescoped to their own payer-panel containers so the state-tab row (also .ptag) isn't touched.
+function sp(el){document.querySelectorAll('#payerPanelSingle .ptag').forEach(t=>t.classList.remove('sel'));el.classList.add('sel');selP=el.dataset.p}
 function sl(el){document.querySelectorAll('#mode-single .ltag').forEach(t=>t.classList.remove('sel'));el.classList.add('sel');selL=el.dataset.l}
-function sp2(el){document.querySelectorAll('#concPayerWrap .ptag').forEach(t=>t.classList.remove('sel'));el.classList.add('sel');selP2=el.dataset.p2}
+function sp2(el){document.querySelectorAll('#payerPanelConcurrent .ptag').forEach(t=>t.classList.remove('sel'));el.classList.add('sel');selP2=el.dataset.p2}
 function sl2(el){document.querySelectorAll('#concLocWrap .ltag').forEach(t=>t.classList.remove('sel'));el.classList.add('sel');selL2=el.dataset.l2}
-function spm(el){document.querySelectorAll('#mode-mhsud .ptag').forEach(t=>t.classList.remove('sel'));el.classList.add('sel');selPM=el.dataset.pm}
+function spm(el){document.querySelectorAll('#payerPanelMHSUD .ptag').forEach(t=>t.classList.remove('sel'));el.classList.add('sel');selPM=el.dataset.pm}
+
+// ---- Dynamic payer rendering (state-aware) ----
+function renderPayerPanel(containerId,state,selectedKey,dataAttr,clickFn){
+  const list=payersForState(state);
+  const groups={};
+  list.forEach(function(p){(groups[p.group]=groups[p.group]||[]).push(p)});
+  let html='';
+  Object.keys(groups).forEach(function(g){
+    html+='<div class="pgroup-label">'+g+'</div><div class="payer-scroll">';
+    groups[g].forEach(function(p){
+      const sel=p.key===selectedKey?' sel':'';
+      html+='<span class="ptag'+sel+'" data-'+dataAttr+'="'+p.key+'" onclick="'+clickFn+'(this)">'+p.name+'</span>';
+    });
+    html+='</div>';
+  });
+  document.getElementById(containerId).innerHTML=html;
+}
+function stateTabsHTML(mode,active){
+  return ['FL','MD','VA'].map(function(s){
+    return '<span class="ptag'+(s===active?' sel':'')+'" style="font-weight:500" onclick="selState(\''+mode+'\',\''+s+'\',this)">'+STATE_LABELS[s]+'</span>';
+  }).join('');
+}
+function selState(mode,state,el){
+  document.querySelectorAll('#stateTabs-'+mode+' .ptag').forEach(function(t){t.classList.remove('sel')});
+  el.classList.add('sel');
+  const firstKey=payersForState(state)[0].key;
+  if(mode==='single'){stateSingle=state;selP=firstKey;renderPayerPanel('payerPanelSingle',state,selP,'p','sp')}
+  else if(mode==='mhsud'){stateMHSUD=state;selPM=firstKey;renderPayerPanel('payerPanelMHSUD',state,selPM,'pm','spm')}
+  else if(mode==='concurrent'){stateConcurrent=state;selP2=firstKey;renderPayerPanel('payerPanelConcurrent',state,selP2,'p2','sp2')}
+}
+function renderBatchPayerOptions(){
+  const sel=document.getElementById('batchPayer');
+  let html='';
+  ['FL','MD','VA'].forEach(function(state){
+    const list=payersForState(state);
+    const groups={};
+    list.forEach(function(p){(groups[p.group]=groups[p.group]||[]).push(p)});
+    Object.keys(groups).forEach(function(g){
+      html+='<optgroup label="'+STATE_LABELS[state]+' — '+g+'">';
+      groups[g].forEach(function(p){html+='<option value="'+p.key+'">'+p.name+'</option>'});
+      html+='</optgroup>';
+    });
+  });
+  sel.innerHTML=html;
+}
 function setupFileInput(inputId,textId,pdfKey){
   const input=document.getElementById(inputId);
   if(!input)return;
@@ -442,6 +459,13 @@ function setupFileInput(inputId,textId,pdfKey){
 window.addEventListener('DOMContentLoaded',function(){
   setupFileInput('fileS','singleDoc','_pdfS');
   setupFileInput('fileMH','mhsudDoc','_pdfMH');
+  document.getElementById('stateTabs-single').innerHTML=stateTabsHTML('single','FL');
+  renderPayerPanel('payerPanelSingle','FL',selP,'p','sp');
+  document.getElementById('stateTabs-mhsud').innerHTML=stateTabsHTML('mhsud','FL');
+  renderPayerPanel('payerPanelMHSUD','FL',selPM,'pm','spm');
+  document.getElementById('stateTabs-concurrent').innerHTML=stateTabsHTML('concurrent','FL');
+  renderPayerPanel('payerPanelConcurrent','FL',selP2,'p2','sp2');
+  renderBatchPayerOptions();
 });
 document.addEventListener('DOMContentLoaded',function(){
   const singleDoc=document.getElementById('singleDoc');
@@ -471,11 +495,13 @@ function buildSys(pKey,lKey,extra){
   extra=extra||'';
   const p=PAYERS[pKey]||PAYERS.sunshine;const l=LOCS[lKey]||LOCS.php;
   const dims=l.dims.map(function(d,i){return 'Dimension '+(i+1)+': '+d}).join('\n');
-  return 'You are a behavioral health utilization review specialist with deep expertise in ASAM criteria and insurance prior authorization requirements.\nPAYER: '+p.name+' | FRAMEWORK: '+p.fw+' | CONTEXT: '+p.notes+'\nREQUESTED LOC: '+l.label+' ('+l.asam+')\nASAM DIMENSIONS:\n'+dims+'\n'+extra+'\nReturn ONLY valid JSON (no markdown): {"auth_score":number,"verdict":"likely_approved"|"likely_denied"|"insufficient_documentation"|"needs_supplementation","verdict_label":string,"summary":string,"met_count":number,"partial_count":number,"gap_count":number,"dimensions":[{"id":number,"name":string,"status":"met"|"partial"|"gap","finding":string,"recommendation":string}],"critical_gaps":[string],"payer_specific_issues":[string],"overall_recommendation":string}';
+  const carveoutNote=p.mh_carveout?'\nIMPORTANT: This payer carves mental health authorization out of the MCO entirely. If the documentation reflects a primary mental health diagnosis rather than SUD, state plainly that this MCO does not authorize that service and the case should route to the state Public Behavioral Health System instead.':'';
+  return 'You are a behavioral health utilization review specialist with deep expertise in ASAM criteria and insurance prior authorization requirements.\nPAYER: '+p.name+' | STATE: '+(p.state||'FL')+' | FRAMEWORK: '+p.fw+' | CONTEXT: '+p.notes+carveoutNote+'\nREQUESTED LOC: '+l.label+' ('+l.asam+')\nASAM DIMENSIONS:\n'+dims+'\n'+extra+'\nReturn ONLY valid JSON (no markdown): {"auth_score":number,"verdict":"likely_approved"|"likely_denied"|"insufficient_documentation"|"needs_supplementation","verdict_label":string,"summary":string,"met_count":number,"partial_count":number,"gap_count":number,"dimensions":[{"id":number,"name":string,"status":"met"|"partial"|"gap","finding":string,"recommendation":string}],"critical_gaps":[string],"payer_specific_issues":[string],"overall_recommendation":string}';
 }
 function buildMHSUDSys(pKey){
   const p=PAYERS[pKey]||PAYERS.sunshine;
-  return 'You are a behavioral health utilization review specialist with expertise in both ASAM criteria (SUD) and InterQual/MCG criteria (Mental Health).\nPAYER: '+p.name+' | SUD FRAMEWORK: '+p.sud_fw+' | MH FRAMEWORK: '+p.mh_fw+' | PARITY CONTEXT: '+p.parity_note+'\nAnalyze the documentation and determine primary diagnosis type, then evaluate under both SUD and MH frameworks.\nReturn ONLY valid JSON (no markdown):\n{"primary_dx_type":"sud"|"mh"|"dual"|"unclear","primary_dx_confidence":"high"|"medium"|"low","primary_dx_rationale":string,"payer_applicable_framework":string,"parity_alert":boolean,"parity_alert_detail":string,"sud_analysis":{"auth_score":number,"recommended_loc":string,"verdict":"likely_approved"|"likely_denied"|"needs_supplementation"|"insufficient_documentation","verdict_label":string,"summary":string,"key_gaps":[string],"key_strengths":[string]},"mh_analysis":{"auth_score":number,"recommended_loc":string,"verdict":"likely_approved"|"likely_denied"|"needs_supplementation"|"insufficient_documentation","verdict_label":string,"summary":string,"key_gaps":[string],"key_strengths":[string]},"dual_diagnosis_note":string,"overall_recommendation":string,"framework_recommendation":string}';
+  const carveoutNote=p.mh_carveout?' This payer carves mental health authorization out of the MCO entirely — mental health services are administered through the state Public Behavioral Health System on a fee-for-service basis, not through this MCO. Say so explicitly in the mh_analysis summary rather than scoring it as if this MCO authorizes it.':'';
+  return 'You are a behavioral health utilization review specialist with expertise in both ASAM criteria (SUD) and InterQual/MCG criteria (Mental Health).\nPAYER: '+p.name+' | STATE: '+(p.state||'FL')+' | SUD FRAMEWORK: '+p.sud_fw+' | MH FRAMEWORK: '+p.mh_fw+' | PARITY CONTEXT: '+p.parity_note+carveoutNote+'\nAnalyze the documentation and determine primary diagnosis type, then evaluate under both SUD and MH frameworks.\nReturn ONLY valid JSON (no markdown):\n{"primary_dx_type":"sud"|"mh"|"dual"|"unclear","primary_dx_confidence":"high"|"medium"|"low","primary_dx_rationale":string,"payer_applicable_framework":string,"parity_alert":boolean,"parity_alert_detail":string,"sud_analysis":{"auth_score":number,"recommended_loc":string,"verdict":"likely_approved"|"likely_denied"|"needs_supplementation"|"insufficient_documentation","verdict_label":string,"summary":string,"key_gaps":[string],"key_strengths":[string]},"mh_analysis":{"auth_score":number,"recommended_loc":string,"verdict":"likely_approved"|"likely_denied"|"needs_supplementation"|"insufficient_documentation","verdict_label":string,"summary":string,"key_gaps":[string],"key_strengths":[string]},"dual_diagnosis_note":string,"overall_recommendation":string,"framework_recommendation":string}';
 }
 async function callAPI(system,content,pdfBase64){
   const body={system:system,messages:[{role:'user',content:content}],max_tokens:4000};
