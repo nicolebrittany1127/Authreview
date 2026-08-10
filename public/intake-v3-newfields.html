@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New Admission Intake</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root {
+    --ink: #1B2B34;
+    --paper: #F6F4EF;
+    --card: #FFFFFF;
+    --teal: #2F6E62;
+    --teal-dark: #234f46;
+    --amber: #C97A2B;
+    --line: #D8D3C4;
+    --danger: #A6423A;
+    --muted: #6b6558;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'IBM Plex Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 56px 24px 96px;
+  }
+  .masthead {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 16px;
+    margin-bottom: 8px;
+  }
+  .masthead .mark {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--teal-dark);
+  }
+  h1 {
+    font-family: 'Zilla Slab', serif;
+    font-weight: 700;
+    font-size: 34px;
+    letter-spacing: -0.01em;
+    margin: 18px 0 4px;
+  }
+  .sub {
+    color: var(--muted);
+    font-size: 15px;
+    margin: 0 0 40px;
+    max-width: 52ch;
+    line-height: 1.5;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    position: relative;
+    padding: 36px 32px;
+  }
+  .card::before {
+    content: "";
+    position: absolute;
+    left: -1px; top: 24px;
+    width: 6px; height: 46px;
+    background: var(--teal);
+    border-radius: 0 3px 3px 0;
+  }
+  fieldset {
+    border: none;
+    margin: 0 0 30px;
+    padding: 0;
+  }
+  fieldset:last-of-type { margin-bottom: 0; }
+  legend {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--teal-dark);
+    padding: 0 0 14px;
+    width: 100%;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 18px;
+  }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .field { margin-bottom: 18px; }
+  .field.full { grid-column: 1 / -1; }
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: var(--ink);
+  }
+  label .req { color: var(--danger); }
+  input[type=text], input[type=date], select, textarea {
+    width: 100%;
+    padding: 10px 12px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14.5px;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 2px;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: 2px solid var(--teal);
+    outline-offset: 1px;
+    border-color: var(--teal);
+  }
+  textarea { resize: vertical; min-height: 72px; }
+  .file-field {
+    border: 1.5px dashed var(--line);
+    border-radius: 3px;
+    padding: 16px;
+    background: var(--paper);
+  }
+  .file-field input[type=file] {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13.5px;
+    width: 100%;
+  }
+  .file-name {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--teal-dark);
+    margin-top: 6px;
+    min-height: 16px;
+  }
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 8px;
+  }
+  button {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    border-radius: 2px;
+    padding: 13px 26px;
+    cursor: pointer;
+  }
+  button:hover { background: var(--teal-dark); }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+  .status-msg {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+  }
+  .status-msg.ok { color: var(--teal-dark); }
+  .status-msg.err { color: var(--danger); }
+  .confirm {
+    display: none;
+    text-align: center;
+    padding: 60px 20px;
+  }
+  .confirm.show { display: block; }
+  .confirm .stamp {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-size: 13px;
+    color: var(--teal-dark);
+    border: 1.5px solid var(--teal);
+    padding: 6px 14px;
+    border-radius: 2px;
+    transform: rotate(-2deg);
+    margin-bottom: 18px;
+  }
+  .confirm h2 {
+    font-family: 'Zilla Slab', serif;
+    font-size: 24px;
+    margin: 0 0 10px;
+  }
+  .confirm p { color: var(--muted); max-width: 44ch; margin: 0 auto; line-height: 1.5; }
+  .hint { font-size: 12.5px; color: var(--muted); margin-top: 6px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="masthead">
+    <div class="mark">Admission Intake · Rev. Cycle</div>
+  </div>
+  <h1>New Admission Intake</h1>
+  <p class="sub">Submit this in place of the admission email. Once received, our team is notified immediately and will follow up on the authorization directly with the payer.</p>
+
+  <div class="card" id="formCard">
+    <form id="intakeForm">
+      <fieldset>
+        <legend>Client &amp; Admission</legend>
+        <div class="row">
+          <div class="field">
+            <label>First name <span class="req">*</span></label>
+            <input type="text" id="first_name" required>
+          </div>
+          <div class="field">
+            <label>Last name <span class="req">*</span></label>
+            <input type="text" id="last_name" required>
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label>Date of birth <span class="req">*</span></label>
+            <input type="date" id="date_of_birth" required>
+          </div>
+          <div class="field">
+            <label>Member ID <span class="req">*</span></label>
+            <input type="text" id="member_id" required>
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label>Facility <span class="req">*</span></label>
+            <input type="text" id="facility_name" required>
+          </div>
+          <div class="field">
+            <label>Admission date <span class="req">*</span></label>
+            <input type="date" id="admission_date" required>
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label>Level of care <span class="req">*</span></label>
+            <select id="level_of_care" required>
+              <option value="" disabled selected>Select level of care</option>
+              <option>Detox</option>
+              <option>Residential</option>
+              <option>PHP</option>
+              <option>IOP</option>
+              <option>Outpatient</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Payer <span class="req">*</span></label>
+            <input type="text" id="payer" required placeholder="e.g. Carelon, Aetna">
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label>Primary insurance <span class="req">*</span></label>
+            <input type="text" id="primary_insurance" required>
+          </div>
+          <div class="field">
+            <label>Secondary insurance</label>
+            <input type="text" id="secondary_insurance" placeholder="If applicable">
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Required Documentation</legend>
+        <div class="field full">
+          <label>Carelon attestation form <span class="req">*</span></label>
+          <div class="file-field">
+            <input type="file" id="attestation_doc" accept=".pdf,.doc,.docx,image/*" required>
+            <div class="file-name" data-for="attestation_doc"></div>
+          </div>
+        </div>
+        <div class="field full">
+          <label>ASAM <span class="req">*</span></label>
+          <div class="file-field">
+            <input type="file" id="asam_doc" accept=".pdf,.doc,.docx,image/*" required>
+            <div class="file-name" data-for="asam_doc"></div>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Notes (optional)</legend>
+        <div class="field full">
+          <label>Anything the biller should know</label>
+          <textarea id="facility_notes" placeholder="Referring contact, urgency, special circumstances..."></textarea>
+        </div>
+      </fieldset>
+
+      <div class="actions">
+        <button type="submit" id="submitBtn">Submit intake</button>
+        <span class="status-msg" id="statusMsg"></span>
+      </div>
+      <p class="hint">Files are stored securely and are only accessible to the billing team.</p>
+    </form>
+  </div>
+
+  <div class="confirm" id="confirmCard">
+    <div class="stamp">Received</div>
+    <h2>Intake submitted</h2>
+    <p>The billing team has been notified and will begin working this authorization with the payer. No further action is needed from you at this time.</p>
+  </div>
+</div>
+
+<script>
+  // --- Configuration -------------------------------------------------
+  // Anon key is safe to expose client-side: the storage policy only
+  // permits INSERT into intake-documents, nothing else.
+  const SUPABASE_URL = "https://bfxlalbdaesoegvyyffd.supabase.co";
+  const SUPABASE_ANON_KEY = "sb_publishable_w9__fwjintmEx8VPmdYuLA_VqMxtMoo";
+  const BUCKET = "intake-documents";
+
+  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  document.querySelectorAll('input[type=file]').forEach(inp => {
+    inp.addEventListener('change', () => {
+      const label = document.querySelector(`.file-name[data-for="${inp.id}"]`);
+      label.textContent = inp.files[0] ? inp.files[0].name : '';
+    });
+  });
+
+  async function uploadDoc(file, prefix) {
+    const path = `${prefix}/${Date.now()}-${file.name}`;
+    const { error } = await supabaseClient.storage.from(BUCKET).upload(path, file);
+    if (error) throw error;
+    return path;
+  }
+
+  const form = document.getElementById('intakeForm');
+  const statusMsg = document.getElementById('statusMsg');
+  const submitBtn = document.getElementById('submitBtn');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    submitBtn.disabled = true;
+    statusMsg.className = 'status-msg';
+    statusMsg.textContent = 'Uploading documents...';
+
+    try {
+      const attestationFile = document.getElementById('attestation_doc').files[0];
+      const asamFile = document.getElementById('asam_doc').files[0];
+
+      const [attestationPath, asamPath] = await Promise.all([
+        uploadDoc(attestationFile, 'attestation'),
+        uploadDoc(asamFile, 'asam'),
+      ]);
+
+      statusMsg.textContent = 'Saving intake...';
+
+      const payload = {
+        first_name: document.getElementById('first_name').value,
+        last_name: document.getElementById('last_name').value,
+        date_of_birth: document.getElementById('date_of_birth').value,
+        member_id: document.getElementById('member_id').value,
+        facility_name: document.getElementById('facility_name').value,
+        admission_date: document.getElementById('admission_date').value,
+        level_of_care: document.getElementById('level_of_care').value,
+        payer: document.getElementById('payer').value,
+        primary_insurance: document.getElementById('primary_insurance').value,
+        secondary_insurance: document.getElementById('secondary_insurance').value,
+        facility_notes: document.getElementById('facility_notes').value,
+        attestation_doc_url: attestationPath,
+        asam_doc_url: asamPath,
+      };
+
+      const res = await fetch('/api/submit-intake', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) throw new Error((await res.json()).error || 'Submission failed');
+
+      document.getElementById('formCard').style.display = 'none';
+      document.getElementById('confirmCard').classList.add('show');
+    } catch (err) {
+      statusMsg.className = 'status-msg err';
+      statusMsg.textContent = err.message || 'Something went wrong. Please try again.';
+      submitBtn.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>
