@@ -11,6 +11,7 @@ const supabase = createClient(
 );
 
 const REQUIRED_FIELDS = [
+  'review_type',
   'first_name',
   'last_name',
   'date_of_birth',
@@ -40,6 +41,7 @@ module.exports = async (req, res) => {
     .from('authorizations')
     .insert([
       {
+        review_type: body.review_type,
         first_name: body.first_name,
         last_name: body.last_name,
         date_of_birth: body.date_of_birth,
