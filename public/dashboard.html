@@ -284,14 +284,19 @@
     const flag = flagged
       ? `<span class="note-flag" title="${esc(r.internal_notes)}">&#9873;</span>`
       : '';
-    return `${esc(r.client_name)}${flag}`;
+    return `${esc(r.first_name)} ${esc(r.last_name)}${flag}`;
   }
 
   const EXPORT_COLUMNS = [
-    ['client_name', 'Client'],
+    ['first_name', 'First name'],
+    ['last_name', 'Last name'],
+    ['date_of_birth', 'Date of birth'],
+    ['member_id', 'Member ID'],
     ['facility_name', 'Facility'],
     ['level_of_care', 'Level of care'],
     ['payer', 'Payer'],
+    ['primary_insurance', 'Primary insurance'],
+    ['secondary_insurance', 'Secondary insurance'],
     ['admission_date', 'Admission date'],
     ['status', 'Status'],
     ['assigned_biller', 'Assigned biller'],
@@ -412,15 +417,18 @@
     document.getElementById('drawer').innerHTML = `
       <div class="drawer-head">
         <div>
-          <h3>${esc(r.client_name)}</h3>
-          <div class="meta">${esc(r.facility_name)} · ${esc(r.level_of_care)} · Admitted ${esc(r.admission_date)}</div>
+          <h3>${esc(r.first_name)} ${esc(r.last_name)}</h3>
+          <div class="meta">DOB ${esc(r.date_of_birth)} · ${esc(r.facility_name)} · ${esc(r.level_of_care)} · Admitted ${esc(r.admission_date)}</div>
         </div>
         <button class="close" onclick="closeDrawer()">&times;</button>
       </div>
       <div class="drawer-body">
         <div class="drawer-section">
           <h4>Submitted documents</h4>
+          <div class="kv"><b>Member ID:</b> ${esc(r.member_id)}</div>
           <div class="kv"><b>Payer:</b> ${esc(r.payer)}</div>
+          <div class="kv"><b>Primary insurance:</b> ${esc(r.primary_insurance)}</div>
+          ${r.secondary_insurance ? `<div class="kv"><b>Secondary insurance:</b> ${esc(r.secondary_insurance)}</div>` : ''}
           ${r.facility_notes ? `<div class="kv"><b>Facility notes:</b> ${esc(r.facility_notes)}</div>` : ''}
           <div class="kv">Attestation: ${r.attestation_doc_url ? `on file` : '—'}</div>
           <div class="kv">ASAM: ${r.asam_doc_url ? `on file` : '—'}</div>
