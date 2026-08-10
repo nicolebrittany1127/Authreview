@@ -284,10 +284,14 @@
     const flag = flagged
       ? `<span class="note-flag" title="${esc(r.internal_notes)}">&#9873;</span>`
       : '';
-    return `${esc(r.first_name)} ${esc(r.last_name)}${flag}`;
+    const typeTag = r.review_type === 'concurrent'
+      ? `<span class="badge soon" style="margin-left:8px;">Concurrent</span>`
+      : '';
+    return `${esc(r.first_name)} ${esc(r.last_name)}${flag}${typeTag}`;
   }
 
   const EXPORT_COLUMNS = [
+    ['review_type', 'Review type'],
     ['first_name', 'First name'],
     ['last_name', 'Last name'],
     ['date_of_birth', 'Date of birth'],
@@ -418,7 +422,7 @@
       <div class="drawer-head">
         <div>
           <h3>${esc(r.first_name)} ${esc(r.last_name)}</h3>
-          <div class="meta">DOB ${esc(r.date_of_birth)} · ${esc(r.facility_name)} · ${esc(r.level_of_care)} · Admitted ${esc(r.admission_date)}</div>
+          <div class="meta">${r.review_type === 'concurrent' ? 'Concurrent review' : 'Initial intake'} · DOB ${esc(r.date_of_birth)} · ${esc(r.facility_name)} · ${esc(r.level_of_care)} · Admitted ${esc(r.admission_date)}</div>
         </div>
         <button class="close" onclick="closeDrawer()">&times;</button>
       </div>
