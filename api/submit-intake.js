@@ -11,11 +11,15 @@ const supabase = createClient(
 );
 
 const REQUIRED_FIELDS = [
-  'client_name',
+  'first_name',
+  'last_name',
+  'date_of_birth',
+  'member_id',
   'facility_name',
   'admission_date',
   'level_of_care',
   'payer',
+  'primary_insurance',
   'attestation_doc_url',
   'asam_doc_url',
 ];
@@ -36,11 +40,16 @@ module.exports = async (req, res) => {
     .from('authorizations')
     .insert([
       {
-        client_name: body.client_name,
+        first_name: body.first_name,
+        last_name: body.last_name,
+        date_of_birth: body.date_of_birth,
+        member_id: body.member_id,
         facility_name: body.facility_name,
         admission_date: body.admission_date,
         level_of_care: body.level_of_care,
         payer: body.payer,
+        primary_insurance: body.primary_insurance,
+        secondary_insurance: body.secondary_insurance || null,
         facility_notes: body.facility_notes || null,
         attestation_doc_url: body.attestation_doc_url,
         asam_doc_url: body.asam_doc_url,
@@ -80,10 +89,10 @@ async function notifyBillingTeam(record) {
     body: JSON.stringify({
       from: process.env.NOTIFY_FROM_EMAIL || 'notifications@yourdomain.com',
       to: process.env.BILLING_TEAM_EMAIL,
-      subject: `New intake: ${record.client_name} (${record.facility_name})`,
+      subject: `New intake: ${record.first_name} ${record.last_name} (${record.facility_name})`,
       text:
         `A new admission intake has been submitted.\n\n` +
-        `Client: ${record.client_name}\n` +
+        `Client: ${record.first_name} ${record.last_name}\n` +
         `Facility: ${record.facility_name}\n` +
         `Admission date: ${record.admission_date}\n` +
         `Level of care: ${record.level_of_care}\n` +
