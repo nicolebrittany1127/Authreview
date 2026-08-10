@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Authorization Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1B2B34;
+    --paper: #F6F4EF;
+    --card: #FFFFFF;
+    --teal: #2F6E62;
+    --teal-dark: #234f46;
+    --amber: #C97A2B;
+    --approved: #3F7D4E;
+    --denied: #A6423A;
+    --line: #D8D3C4;
+    --muted: #6b6558;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'IBM Plex Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---- Access gate ---- */
+  #gate {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #gate .box {
+    background: var(--card);
+    border: 1px solid var(--line);
+    padding: 36px 32px;
+    width: 320px;
+    text-align: center;
+  }
+  #gate h2 { font-family: 'Zilla Slab', serif; margin: 0 0 16px; }
+  #gate input {
+    width: 100%; padding: 10px 12px; margin-bottom: 12px;
+    border: 1px solid var(--line); font-family: 'IBM Plex Mono', monospace;
+  }
+  #gate button {
+    width: 100%; padding: 11px; background: var(--ink); color: var(--paper);
+    border: none; font-weight: 600; cursor: pointer;
+  }
+  #gate .err { color: var(--denied); font-size: 13px; min-height: 18px; }
+
+  /* ---- App shell ---- */
+  #app { display: none; }
+  .topbar {
+    display: flex; align-items: baseline; justify-content: space-between;
+    padding: 22px 32px; border-bottom: 2px solid var(--ink);
+  }
+  .topbar .mark {
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--teal-dark);
+  }
+  .topbar h1 { font-family: 'Zilla Slab', serif; font-size: 24px; margin: 4px 0 0; }
+
+  .tabs {
+    display: flex; gap: 4px; padding: 18px 32px 0; border-bottom: 1px solid var(--line);
+  }
+  .tab {
+    font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; letter-spacing: 0.04em;
+    text-transform: uppercase; padding: 10px 16px; cursor: pointer;
+    border: 1px solid transparent; border-bottom: none;
+    color: var(--muted); background: transparent;
+  }
+  .tab .count {
+    display: inline-block; margin-left: 6px; font-weight: 600;
+  }
+  .tab.active {
+    color: var(--ink); background: var(--card);
+    border-color: var(--line); border-radius: 3px 3px 0 0;
+  }
+
+  .content { padding: 24px 32px 60px; max-width: 1180px; margin: 0 auto; }
+
+  .export-bar {
+    display: flex; gap: 10px; padding: 14px 32px 0; max-width: 1180px; margin: 0 auto;
+  }
+  .export-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: 'IBM Plex Sans', sans-serif; font-size: 12.5px; font-weight: 600;
+    letter-spacing: 0.02em; color: var(--teal-dark);
+    background: var(--card); border: 1px solid var(--line); border-radius: 2px;
+    padding: 7px 13px; cursor: pointer;
+  }
+  .export-btn:hover { background: var(--paper); border-color: var(--teal); }
+  .export-btn i { font-size: 14px; }
+
+  table { width: 100%; border-collapse: collapse; background: var(--card); border: 1px solid var(--line); }
+  th {
+    text-align: left; font-family: 'IBM Plex Mono', monospace; font-size: 11px;
+    letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+    padding: 10px 14px; border-bottom: 1px solid var(--line);
+  }
+  td { padding: 12px 14px; border-bottom: 1px solid var(--line); font-size: 14px; vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr.row-clickable { cursor: pointer; }
+  tr.row-clickable:hover { background: #FBFAF7; }
+
+  .badge {
+    display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 10.5px;
+    letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 9px;
+    border-radius: 2px; border: 1.2px solid currentColor;
+  }
+  .badge.urgent { color: var(--denied); }
+  .badge.soon { color: var(--amber); }
+  .badge.ok { color: var(--approved); }
+  .badge.neutral { color: var(--muted); }
+
+  .empty { padding: 40px; text-align: center; color: var(--muted); font-size: 14px; }
+
+  .note-flag {
+    display: inline-block; margin-left: 6px; color: var(--amber);
+    font-size: 13px; cursor: help; vertical-align: middle;
+  }
+
+  /* ---- Drawer ---- */
+  #overlay {
+    display: none; position: fixed; inset: 0; background: rgba(27,43,52,0.35); z-index: 10;
+  }
+  #overlay.show { display: block; }
+  #drawer {
+    position: fixed; top: 0; right: 0; height: 100%; width: 440px; max-width: 92vw;
+    background: var(--card); z-index: 11; box-shadow: -4px 0 24px rgba(0,0,0,0.12);
+    transform: translateX(100%); transition: transform 0.2s ease;
+    overflow-y: auto;
+  }
+  #drawer.show { transform: translateX(0); }
+  .drawer-head {
+    padding: 24px 26px 16px; border-bottom: 1px solid var(--line);
+    display: flex; justify-content: space-between; align-items: flex-start;
+  }
+  .drawer-head h3 { font-family: 'Zilla Slab', serif; margin: 0 0 4px; font-size: 20px; }
+  .drawer-head .meta { font-size: 12.5px; color: var(--muted); }
+  .drawer-head button.close {
+    background: none; border: none; font-size: 20px; cursor: pointer; color: var(--muted); line-height: 1;
+  }
+  .drawer-body { padding: 20px 26px 40px; }
+  .drawer-section { margin-bottom: 24px; }
+  .drawer-section h4 {
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--teal-dark); margin: 0 0 10px;
+  }
+  .kv { font-size: 13.5px; margin-bottom: 6px; }
+  .kv b { font-weight: 600; }
+  .drawer-body a { color: var(--teal-dark); }
+  .field { margin-bottom: 14px; }
+  .field label { display: block; font-size: 12.5px; font-weight: 600; margin-bottom: 5px; }
+  .field input, .field select, .field textarea {
+    width: 100%; padding: 8px 10px; font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px; border: 1px solid var(--line); background: var(--paper); border-radius: 2px;
+  }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .save-bar { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
+  .save-bar button {
+    padding: 10px 20px; font-weight: 600; border: none; border-radius: 2px;
+    background: var(--ink); color: var(--paper); cursor: pointer; font-size: 14px;
+  }
+  .save-bar .msg { font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; }
+  .save-bar .msg.err { color: var(--denied); }
+  .save-bar .msg.ok { color: var(--teal-dark); }
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <div class="box">
+    <h2>Dashboard access</h2>
+    <input type="password" id="tokenInput" placeholder="Access token">
+    <button onclick="enterDashboard()">Enter</button>
+    <div class="err" id="gateErr"></div>
+  </div>
+</div>
+
+<div id="app">
+  <div class="topbar">
+    <div>
+      <div class="mark">Revenue Cycle · Authorization Tracker</div>
+      <h1>Authorization Dashboard</h1>
+    </div>
+  </div>
+
+  <div class="tabs" id="tabs"></div>
+  <div class="export-bar">
+    <button class="export-btn" onclick="exportCSV(activeTab)">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Export this view
+    </button>
+    <button class="export-btn" onclick="exportCSV('all')">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Export all
+    </button>
+  </div>
+  <div class="content" id="content"></div>
+</div>
+
+<div id="overlay" onclick="closeDrawer()"></div>
+<div id="drawer"></div>
+
+<script>
+  const TOKEN_KEY = 'authtracker_dashboard_token';
+  let records = [];
+  let activeTab = 'new';
+
+  function enterDashboard() {
+    const token = document.getElementById('tokenInput').value.trim();
+    if (!token) return;
+    sessionStorage.setItem(TOKEN_KEY, token);
+    loadRecords();
+  }
+
+  async function loadRecords() {
+    const token = sessionStorage.getItem(TOKEN_KEY);
+    const res = await fetch('/api/list-authorizations', {
+      headers: { 'x-access-token': token }
+    });
+    if (res.status === 401) {
+      document.getElementById('gateErr').textContent = 'Invalid token.';
+      sessionStorage.removeItem(TOKEN_KEY);
+      return;
+    }
+    const data = await res.json();
+    records = data.records || [];
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    renderTabs();
+    renderContent();
+  }
+
+  function countFor(status) {
+    return records.filter(r => r.status === status).length;
+  }
+
+  function renderTabs() {
+    const tabs = [
+      ['new', 'New Intakes'],
+      ['pending', 'Pending'],
+      ['approved', 'Approved'],
+      ['denied', 'Denied'],
+    ];
+    document.getElementById('tabs').innerHTML = tabs.map(([key, label]) => `
+      <div class="tab ${activeTab === key ? 'active' : ''}" onclick="setTab('${key}')">
+        ${label}<span class="count">(${countFor(key)})</span>
+      </div>
+    `).join('');
+  }
+
+  function setTab(key) {
+    activeTab = key;
+    renderTabs();
+    renderContent();
+  }
+
+  function daysUntil(dateStr) {
+    if (!dateStr) return null;
+    const diff = (new Date(dateStr) - new Date());
+    return Math.ceil(diff / (1000 * 60 * 60 * 24));
+  }
+
+  function expiryBadge(days) {
+    if (days === null) return '';
+    if (days < 0) return `<span class="badge urgent">Expired ${Math.abs(days)}d ago</span>`;
+    if (days <= 7) return `<span class="badge urgent">${days}d left</span>`;
+    if (days <= 14) return `<span class="badge soon">${days}d left</span>`;
+    return `<span class="badge ok">${days}d left</span>`;
+  }
+
+  function nameCell(r) {
+    // Shows a small flag next to the client name when the record has notes
+    // (overlapping auths, special-interest accounts, etc.) so billers spot
+    // it from the table without opening every record.
+    const flagged = r.internal_notes && r.internal_notes.trim().length > 0;
+    const flag = flagged
+      ? `<span class="note-flag" title="${esc(r.internal_notes)}">&#9873;</span>`
+      : '';
+    return `${esc(r.client_name)}${flag}`;
+  }
+
+  const EXPORT_COLUMNS = [
+    ['client_name', 'Client'],
+    ['facility_name', 'Facility'],
+    ['level_of_care', 'Level of care'],
+    ['payer', 'Payer'],
+    ['admission_date', 'Admission date'],
+    ['status', 'Status'],
+    ['assigned_biller', 'Assigned biller'],
+    ['payer_contact_date', 'Payer contact date'],
+    ['auth_number', 'Auth number'],
+    ['auth_start_date', 'Auth start date'],
+    ['auth_end_date', 'Auth end date'],
+    ['units_authorized', 'Units authorized'],
+    ['denial_reason', 'Denial reason'],
+    ['internal_notes', 'Notes'],
+    ['submitted_at', 'Submitted at'],
+    ['updated_at', 'Updated at'],
+  ];
+
+  function csvCell(value) {
+    if (value === null || value === undefined) return '';
+    const s = String(value);
+    if (/[",\n]/.test(s)) return `"${s.replace(/"/g, '""')}"`;
+    return s;
+  }
+
+  function exportCSV(scope) {
+    const list = scope === 'all' ? records : records.filter(r => r.status === scope);
+    if (!list.length) return;
+
+    const header = EXPORT_COLUMNS.map(([, label]) => csvCell(label)).join(',');
+    const rows = list.map(r =>
+      EXPORT_COLUMNS.map(([key]) => csvCell(r[key])).join(',')
+    );
+    const csv = [header, ...rows].join('\r\n');
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const dateStamp = new Date().toISOString().slice(0, 10);
+    a.href = url;
+    a.download = `authorizations-${scope}-${dateStamp}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  function renderContent() {
+    let list = records.filter(r => r.status === activeTab);
+
+    if (activeTab === 'approved') {
+      list = list.slice().sort((a, b) => {
+        const da = a.auth_end_date ? new Date(a.auth_end_date) : Infinity;
+        const db = b.auth_end_date ? new Date(b.auth_end_date) : Infinity;
+        return da - db;
+      });
+    } else {
+      list = list.slice().sort((a, b) => new Date(b.submitted_at) - new Date(a.submitted_at));
+    }
+
+    const container = document.getElementById('content');
+
+    if (!list.length) {
+      container.innerHTML = `<div class="empty">Nothing here right now.</div>`;
+      return;
+    }
+
+    let cols;
+    if (activeTab === 'new') {
+      cols = `<th>Client</th><th>Facility</th><th>LOC</th><th>Payer</th><th>Admitted</th><th>Biller</th>`;
+    } else if (activeTab === 'pending') {
+      cols = `<th>Client</th><th>Facility</th><th>Payer</th><th>Contacted</th><th>Biller</th>`;
+    } else if (activeTab === 'approved') {
+      cols = `<th>Client</th><th>Facility</th><th>Payer</th><th>Auth #</th><th>End date</th><th>Status</th><th>Biller</th>`;
+    } else {
+      cols = `<th>Client</th><th>Facility</th><th>Payer</th><th>Reason</th><th>Biller</th>`;
+    }
+
+    const rows = list.map(r => {
+      if (activeTab === 'new') {
+        return `<tr class="row-clickable" onclick="openDrawer('${r.id}')">
+          <td>${nameCell(r)}</td><td>${esc(r.facility_name)}</td>
+          <td>${esc(r.level_of_care)}</td><td>${esc(r.payer)}</td>
+          <td>${esc(r.admission_date)}</td><td>${esc(r.assigned_biller || '—')}</td>
+        </tr>`;
+      }
+      if (activeTab === 'pending') {
+        return `<tr class="row-clickable" onclick="openDrawer('${r.id}')">
+          <td>${nameCell(r)}</td><td>${esc(r.facility_name)}</td>
+          <td>${esc(r.payer)}</td><td>${esc(r.payer_contact_date || '—')}</td>
+          <td>${esc(r.assigned_biller || '—')}</td>
+        </tr>`;
+      }
+      if (activeTab === 'approved') {
+        return `<tr class="row-clickable" onclick="openDrawer('${r.id}')">
+          <td>${nameCell(r)}</td><td>${esc(r.facility_name)}</td>
+          <td>${esc(r.payer)}</td><td>${esc(r.auth_number || '—')}</td>
+          <td>${esc(r.auth_end_date || '—')}</td>
+          <td>${expiryBadge(daysUntil(r.auth_end_date))}</td>
+          <td>${esc(r.assigned_biller || '—')}</td>
+        </tr>`;
+      }
+      return `<tr class="row-clickable" onclick="openDrawer('${r.id}')">
+        <td>${nameCell(r)}</td><td>${esc(r.facility_name)}</td>
+        <td>${esc(r.payer)}</td><td>${esc(r.denial_reason || '—')}</td>
+        <td>${esc(r.assigned_biller || '—')}</td>
+      </tr>`;
+    }).join('');
+
+    container.innerHTML = `<table><thead><tr>${cols}</tr></thead><tbody>${rows}</tbody></table>`;
+  }
+
+  function esc(s) {
+    if (s === null || s === undefined) return '';
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  function openDrawer(id) {
+    const r = records.find(x => x.id === id);
+    if (!r) return;
+
+    document.getElementById('drawer').innerHTML = `
+      <div class="drawer-head">
+        <div>
+          <h3>${esc(r.client_name)}</h3>
+          <div class="meta">${esc(r.facility_name)} · ${esc(r.level_of_care)} · Admitted ${esc(r.admission_date)}</div>
+        </div>
+        <button class="close" onclick="closeDrawer()">&times;</button>
+      </div>
+      <div class="drawer-body">
+        <div class="drawer-section">
+          <h4>Submitted documents</h4>
+          <div class="kv"><b>Payer:</b> ${esc(r.payer)}</div>
+          ${r.facility_notes ? `<div class="kv"><b>Facility notes:</b> ${esc(r.facility_notes)}</div>` : ''}
+          <div class="kv">Attestation: ${r.attestation_doc_url ? `on file` : '—'}</div>
+          <div class="kv">ASAM: ${r.asam_doc_url ? `on file` : '—'}</div>
+        </div>
+
+        <div class="drawer-section">
+          <h4>Notes &amp; flags</h4>
+          <div class="field">
+            <label>Overlapping authorizations, special-interest accounts, anything the team should know</label>
+            <textarea id="f_internal_notes" rows="4" placeholder="e.g. Overlaps with a prior auth ending 8/20 — confirm with payer before submitting.">${esc(r.internal_notes || '')}</textarea>
+          </div>
+        </div>
+
+        <div class="drawer-section">
+          <h4>Manage authorization</h4>
+          <div class="field">
+            <label>Assigned biller</label>
+            <input type="text" id="f_assigned_biller" value="${esc(r.assigned_biller || '')}" placeholder="Name or email">
+          </div>
+          <div class="field">
+            <label>Status</label>
+            <select id="f_status">
+              <option value="new" ${r.status==='new'?'selected':''}>New</option>
+              <option value="pending" ${r.status==='pending'?'selected':''}>Pending</option>
+              <option value="approved" ${r.status==='approved'?'selected':''}>Approved</option>
+              <option value="denied" ${r.status==='denied'?'selected':''}>Denied</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Payer contact date</label>
+            <input type="date" id="f_payer_contact_date" value="${esc(r.payer_contact_date || '')}">
+          </div>
+          <div class="row2">
+            <div class="field">
+              <label>Auth number</label>
+              <input type="text" id="f_auth_number" value="${esc(r.auth_number || '')}">
+            </div>
+            <div class="field">
+              <label>Units authorized</label>
+              <input type="text" id="f_units_authorized" value="${esc(r.units_authorized || '')}">
+            </div>
+          </div>
+          <div class="row2">
+            <div class="field">
+              <label>Auth start date</label>
+              <input type="date" id="f_auth_start_date" value="${esc(r.auth_start_date || '')}">
+            </div>
+            <div class="field">
+              <label>Auth end date</label>
+              <input type="date" id="f_auth_end_date" value="${esc(r.auth_end_date || '')}">
+            </div>
+          </div>
+          <div class="field">
+            <label>Denial reason (if denied)</label>
+            <input type="text" id="f_denial_reason" value="${esc(r.denial_reason || '')}">
+          </div>
+          <div class="save-bar">
+            <button onclick="saveRecord('${r.id}')">Save changes</button>
+            <span class="msg" id="saveMsg"></span>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.getElementById('overlay').classList.add('show');
+    document.getElementById('drawer').classList.add('show');
+  }
+
+  function closeDrawer() {
+    document.getElementById('overlay').classList.remove('show');
+    document.getElementById('drawer').classList.remove('show');
+  }
+
+  async function saveRecord(id) {
+    const existing = records.find(x => x.id === id);
+    const patch = {
+      id,
+      assigned_biller: val('f_assigned_biller'),
+      status: val('f_status'),
+      payer_contact_date: val('f_payer_contact_date') || null,
+      auth_number: val('f_auth_number'),
+      units_authorized: val('f_units_authorized') ? Number(val('f_units_authorized')) : null,
+      auth_start_date: val('f_auth_start_date') || null,
+      auth_end_date: val('f_auth_end_date') || null,
+      denial_reason: val('f_denial_reason'),
+      internal_notes: val('f_internal_notes'),
+      __existing: existing,
+    };
+
+    const msg = document.getElementById('saveMsg');
+    msg.className = 'msg';
+    msg.textContent = 'Saving...';
+
+    const token = sessionStorage.getItem(TOKEN_KEY);
+    const res = await fetch('/api/update-authorization', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', 'x-access-token': token },
+      body: JSON.stringify(patch),
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      msg.className = 'msg err';
+      msg.textContent = data.error || 'Could not save.';
+      return;
+    }
+
+    msg.className = 'msg ok';
+    msg.textContent = 'Saved.';
+    const idx = records.findIndex(x => x.id === id);
+    records[idx] = data.record;
+    renderTabs();
+    renderContent();
+    setTimeout(closeDrawer, 500);
+  }
+
+  function val(id) {
+    const el = document.getElementById(id);
+    return el ? el.value.trim() : '';
+  }
+
+  // Resume session if token already present
+  if (sessionStorage.getItem(TOKEN_KEY)) {
+    loadRecords();
+  }
+</script>
+</body>
+</html>
