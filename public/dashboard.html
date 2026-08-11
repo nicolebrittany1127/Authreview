@@ -225,6 +225,23 @@
   .save-bar .msg { font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; }
   .save-bar .msg.err { color: var(--denied); }
   .save-bar .msg.ok { color: var(--teal-dark); }
+
+  .hint { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  .btn-secondary {
+    background: var(--paper); color: var(--ink); border: 1px solid var(--line);
+  }
+  .btn-secondary:hover { background: var(--surface3, #efefeb); }
+
+  .btn-danger {
+    background: var(--card); color: var(--danger); border: 1px solid var(--danger);
+  }
+  .btn-danger:hover { background: var(--danger); color: #fff; }
+
+  .danger-zone {
+    border: 1px solid rgba(166,66,58,0.25); border-radius: 4px; padding: 14px 16px; background: #FBF3F2;
+  }
+  .danger-zone h4 { color: var(--danger); }
 </style>
 </head>
 <body>
@@ -294,7 +311,11 @@
   }
 
   function countFor(status) {
-    return records.filter(r => r.status === status).length;
+    return records.filter(r => r.status === status && !r.discharged_at).length;
+  }
+
+  function countDischarged() {
+    return records.filter(r => r.discharged_at).length;
   }
 
   function renderTabs() {
@@ -304,10 +325,11 @@
       ['pending', 'Pending', 'pending'],
       ['approved', 'Approved', 'approved'],
       ['denied', 'Denied', 'denied'],
+      ['discharged', 'Discharged', '__discharged'],
     ];
     document.getElementById('tabs').innerHTML = tabs.map(([key, label, statusKey]) => `
       <div class="tab ${activeTab === key ? 'active' : ''}" onclick="setTab('${key}')">
-        ${label}${statusKey ? `<span class="count">(${countFor(statusKey)})</span>` : ''}
+        ${label}${statusKey ? `<span class="count">(${statusKey === '__discharged' ? countDischarged() : countFor(statusKey)})</span>` : ''}
       </div>
     `).join('');
   }
@@ -366,6 +388,8 @@
     ['auth_end_date', 'Auth end date'],
     ['units_authorized', 'Units authorized'],
     ['denial_reason', 'Denial reason'],
+    ['discharged_at', 'Discharged'],
+    ['discharge_reason', 'Discharge reason'],
     ['internal_notes', 'Notes'],
     ['submitted_at', 'Submitted at'],
     ['updated_at', 'Updated at'],
@@ -379,7 +403,13 @@
   }
 
   function exportCSV(scope) {
-    const list = scope === 'all' ? records : records.filter(r => r.status === scope);
+    let list;
+    if (scope === 'all') list = records;
+    else if (scope === 'discharged') list = records.filter(r => r.discharged_at);
+    else if (scope === 'concurrent') list = records.filter(r => r.review_type === 'concurrent' && !r.discharged_at);
+    else if (scope === 'expiring7') list = records.filter(r => r.status === 'approved' && !r.discharged_at && r.auth_end_date && daysUntil(r.auth_end_date) <= 7);
+    else list = records.filter(r => r.status === scope && !r.discharged_at);
+
     if (!list.length) return;
 
     const header = EXPORT_COLUMNS.map(([, label]) => csvCell(label)).join(',');
@@ -405,9 +435,10 @@
 
     const newCount = countFor('new');
     const pendingCount = countFor('pending');
-    const approvedRecords = records.filter(r => r.status === 'approved');
+    const approvedRecords = records.filter(r => r.status === 'approved' && !r.discharged_at);
     const deniedCount = countFor('denied');
-    const concurrentCount = records.filter(r => r.review_type === 'concurrent' && r.status !== 'denied').length;
+    const concurrentCount = records.filter(r => r.review_type === 'concurrent' && r.status !== 'denied' && !r.discharged_at).length;
+    const dischargedCount = countDischarged();
 
     const expiring = approvedRecords
       .filter(r => r.auth_end_date)
@@ -442,6 +473,7 @@
         ${metricCard('Denied', deniedCount, 'denied')}
         ${metricCard('Concurrent in progress', concurrentCount, 'concurrent')}
         ${metricCard('Expiring ≤7 days', urgentCount, 'expiring7', urgentCount ? 'urgent' : '')}
+        ${metricCard('Discharged', dischargedCount, 'discharged')}
       </div>
 
       <div class="overview-section">
@@ -464,14 +496,17 @@
     const isVirtual = activeTab === 'concurrent' || activeTab === 'expiring7';
     let list;
 
-    if (activeTab === 'concurrent') {
-      list = records.filter(r => r.review_type === 'concurrent')
+    if (activeTab === 'discharged') {
+      list = records.filter(r => r.discharged_at)
+        .slice().sort((a, b) => new Date(b.discharged_at) - new Date(a.discharged_at));
+    } else if (activeTab === 'concurrent') {
+      list = records.filter(r => r.review_type === 'concurrent' && !r.discharged_at)
         .slice().sort((a, b) => new Date(b.submitted_at) - new Date(a.submitted_at));
     } else if (activeTab === 'expiring7') {
-      list = records.filter(r => r.status === 'approved' && r.auth_end_date && daysUntil(r.auth_end_date) <= 7)
+      list = records.filter(r => r.status === 'approved' && !r.discharged_at && r.auth_end_date && daysUntil(r.auth_end_date) <= 7)
         .slice().sort((a, b) => new Date(a.auth_end_date) - new Date(b.auth_end_date));
     } else {
-      list = records.filter(r => r.status === activeTab);
+      list = records.filter(r => r.status === activeTab && !r.discharged_at);
       if (activeTab === 'approved') {
         list = list.slice().sort((a, b) => {
           const da = a.auth_end_date ? new Date(a.auth_end_date) : Infinity;
@@ -505,6 +540,8 @@
       cols = `<th>Client</th><th>Facility</th><th>Payer</th><th>Status</th><th>Biller</th><th></th>`;
     } else if (activeTab === 'expiring7') {
       cols = `<th>Client</th><th>Facility</th><th>Payer</th><th>Auth #</th><th>End date</th><th></th>`;
+    } else if (activeTab === 'discharged') {
+      cols = `<th>Client</th><th>Facility</th><th>Payer</th><th>Discharged</th><th>Biller</th><th></th>`;
     } else {
       cols = `<th>Client</th><th>Facility</th><th>Payer</th><th>Reason</th><th>Biller</th><th></th>`;
     }
@@ -549,6 +586,14 @@
           <td>${nameCell(r)}</td><td>${esc(r.facility_name)}</td>
           <td>${esc(r.payer)}</td><td>${esc(r.auth_number || '—')}</td>
           <td>${esc(r.auth_end_date || '—')} ${expiryBadge(daysUntil(r.auth_end_date))}</td>
+          <td class="manage-cell">Manage &rsaquo;</td>
+        </tr>`;
+      }
+      if (activeTab === 'discharged') {
+        return `<tr class="row-clickable" onclick="openDrawer('${r.id}')">
+          <td>${nameCell(r)}</td><td>${esc(r.facility_name)}</td>
+          <td>${esc(r.payer)}</td><td>${esc(r.discharged_at || '—')}</td>
+          <td>${esc(r.assigned_biller || '—')}</td>
           <td class="manage-cell">Manage &rsaquo;</td>
         </tr>`;
       }
@@ -687,6 +732,39 @@
             <span class="msg" id="saveMsg"></span>
           </div>
         </div>
+
+        <div class="drawer-section">
+          <h4>Discharge &amp; census</h4>
+          ${r.discharged_at
+            ? `<div class="kv" style="margin-bottom:10px;"><b>Discharged:</b> ${esc(r.discharged_at)}${r.discharge_reason ? ' — ' + esc(r.discharge_reason) : ''}</div>
+               <div class="save-bar">
+                 <button class="btn-secondary" onclick="undoDischarge('${r.id}')">Undo discharge</button>
+                 <span class="msg" id="dischargeMsg"></span>
+               </div>`
+            : `<div class="field">
+                 <label>Discharge date</label>
+                 <input type="date" id="f_discharged_at" value="${new Date().toISOString().slice(0,10)}">
+               </div>
+               <div class="field">
+                 <label>Discharge reason (optional)</label>
+                 <input type="text" id="f_discharge_reason" placeholder="e.g. Completed treatment, transferred, AMA">
+               </div>
+               <div class="save-bar">
+                 <button class="btn-secondary" onclick="dischargeClient('${r.id}')">Discharge client</button>
+                 <span class="msg" id="dischargeMsg"></span>
+               </div>
+               <p class="hint" style="margin-top:8px;">Discharging removes this client from your active census and status tabs, without deleting the record.</p>`
+          }
+        </div>
+
+        <div class="drawer-section danger-zone">
+          <h4>Danger zone</h4>
+          <p class="hint" style="margin-bottom:10px;">Permanently deletes this record from the database. This cannot be undone and does not remove the uploaded files themselves.</p>
+          <div class="save-bar">
+            <button class="btn-danger" onclick="deleteRecord('${r.id}')">Delete permanently</button>
+            <span class="msg" id="deleteMsg"></span>
+          </div>
+        </div>
       </div>
     `;
 
@@ -740,6 +818,96 @@
     renderTabs();
     renderContent();
     setTimeout(closeDrawer, 500);
+  }
+
+  async function dischargeClient(id) {
+    const msg = document.getElementById('dischargeMsg');
+    msg.className = 'msg';
+    msg.textContent = 'Saving...';
+
+    const patch = {
+      id,
+      discharged_at: val('f_discharged_at') || new Date().toISOString().slice(0, 10),
+      discharge_reason: val('f_discharge_reason'),
+    };
+
+    const token = sessionStorage.getItem(TOKEN_KEY);
+    const res = await fetch('/api/update-authorization', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', 'x-access-token': token },
+      body: JSON.stringify(patch),
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      msg.className = 'msg err';
+      msg.textContent = data.error || 'Could not discharge.';
+      return;
+    }
+
+    const idx = records.findIndex(x => x.id === id);
+    records[idx] = data.record;
+    renderTabs();
+    renderContent();
+    closeDrawer();
+  }
+
+  async function undoDischarge(id) {
+    const msg = document.getElementById('dischargeMsg');
+    msg.className = 'msg';
+    msg.textContent = 'Saving...';
+
+    const token = sessionStorage.getItem(TOKEN_KEY);
+    const res = await fetch('/api/update-authorization', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', 'x-access-token': token },
+      body: JSON.stringify({ id, discharged_at: null, discharge_reason: '' }),
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      msg.className = 'msg err';
+      msg.textContent = data.error || 'Could not undo discharge.';
+      return;
+    }
+
+    const idx = records.findIndex(x => x.id === id);
+    records[idx] = data.record;
+    renderTabs();
+    renderContent();
+    closeDrawer();
+  }
+
+  async function deleteRecord(id) {
+    const r = records.find(x => x.id === id);
+    const name = r ? `${r.first_name || ''} ${r.last_name || ''}`.trim() : 'this record';
+    const confirmed = window.confirm(
+      `Permanently delete ${name}? This cannot be undone. Uploaded documents will remain in storage but the record itself will be gone.`
+    );
+    if (!confirmed) return;
+
+    const msg = document.getElementById('deleteMsg');
+    msg.className = 'msg';
+    msg.textContent = 'Deleting...';
+
+    const token = sessionStorage.getItem(TOKEN_KEY);
+    const res = await fetch('/api/delete-authorization', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json', 'x-access-token': token },
+      body: JSON.stringify({ id }),
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      msg.className = 'msg err';
+      msg.textContent = data.error || 'Could not delete.';
+      return;
+    }
+
+    records = records.filter(x => x.id !== id);
+    renderTabs();
+    renderContent();
+    closeDrawer();
   }
 
   function val(id) {
