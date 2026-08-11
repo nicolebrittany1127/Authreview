@@ -131,6 +131,42 @@
     white-space: nowrap;
   }
 
+  /* ---- Overview ---- */
+  .metric-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px; margin-bottom: 32px;
+  }
+  .metric-card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 4px;
+    padding: 18px 18px 16px;
+  }
+  .metric-label {
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.06em; color: var(--muted); margin-bottom: 8px;
+  }
+  .metric-value {
+    font-family: 'Zilla Slab', serif; font-weight: 700; font-size: 32px; color: var(--ink);
+  }
+  .metric-value.urgent { color: var(--denied); }
+
+  .overview-section h4 {
+    font-family: 'IBM Plex Mono', monospace; font-size: 12px; text-transform: uppercase;
+    letter-spacing: 0.06em; color: var(--teal-dark); margin: 0 0 14px;
+  }
+  .overview-section .section-count { color: var(--muted); font-weight: 400; }
+  .alert-list {
+    background: var(--card); border: 1px solid var(--line); border-radius: 4px; overflow: hidden;
+  }
+  .alert-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 18px; border-bottom: 1px solid var(--line); cursor: pointer;
+  }
+  .alert-row:last-child { border-bottom: none; }
+  .alert-row:hover { background: var(--paper); }
+  .alert-main { display: flex; flex-direction: column; gap: 3px; }
+  .alert-name { font-weight: 600; font-size: 14px; }
+  .alert-meta { font-size: 12.5px; color: var(--muted); }
+
   /* ---- Drawer ---- */
   #overlay {
     display: none; position: fixed; inset: 0; background: rgba(27,43,52,0.35); z-index: 10;
@@ -217,7 +253,7 @@
 <script>
   const TOKEN_KEY = 'authtracker_dashboard_token';
   let records = [];
-  let activeTab = 'new';
+  let activeTab = 'overview';
 
   function enterDashboard() {
     const token = document.getElementById('tokenInput').value.trim();
@@ -250,14 +286,15 @@
 
   function renderTabs() {
     const tabs = [
-      ['new', 'New Intakes'],
-      ['pending', 'Pending'],
-      ['approved', 'Approved'],
-      ['denied', 'Denied'],
+      ['overview', 'Overview', null],
+      ['new', 'New Intakes', 'new'],
+      ['pending', 'Pending', 'pending'],
+      ['approved', 'Approved', 'approved'],
+      ['denied', 'Denied', 'denied'],
     ];
-    document.getElementById('tabs').innerHTML = tabs.map(([key, label]) => `
+    document.getElementById('tabs').innerHTML = tabs.map(([key, label, statusKey]) => `
       <div class="tab ${activeTab === key ? 'active' : ''}" onclick="setTab('${key}')">
-        ${label}<span class="count">(${countFor(key)})</span>
+        ${label}${statusKey ? `<span class="count">(${countFor(statusKey)})</span>` : ''}
       </div>
     `).join('');
   }
@@ -350,7 +387,67 @@
     URL.revokeObjectURL(url);
   }
 
+  function renderOverview() {
+    const container = document.getElementById('content');
+
+    const newCount = countFor('new');
+    const pendingCount = countFor('pending');
+    const approvedRecords = records.filter(r => r.status === 'approved');
+    const deniedCount = countFor('denied');
+    const concurrentCount = records.filter(r => r.review_type === 'concurrent' && r.status !== 'denied').length;
+
+    const expiring = approvedRecords
+      .filter(r => r.auth_end_date)
+      .map(r => ({ ...r, _days: daysUntil(r.auth_end_date) }))
+      .filter(r => r._days <= 14)
+      .sort((a, b) => a._days - b._days);
+
+    const urgentCount = expiring.filter(r => r._days <= 7).length;
+
+    const metricCard = (label, value, tone) => `
+      <div class="metric-card">
+        <div class="metric-label">${label}</div>
+        <div class="metric-value ${tone || ''}">${value}</div>
+      </div>`;
+
+    const alertRows = expiring.length
+      ? expiring.map(r => `
+        <div class="alert-row" onclick="openDrawer('${r.id}')">
+          <div class="alert-main">
+            <span class="alert-name">${esc(r.first_name)} ${esc(r.last_name)}</span>
+            <span class="alert-meta">${esc(r.facility_name)} · ${esc(r.payer)} · Auth #${esc(r.auth_number || '—')}</span>
+          </div>
+          ${expiryBadge(r._days)}
+        </div>`).join('')
+      : `<div class="empty" style="padding:24px;">Nothing expiring in the next 14 days.</div>`;
+
+    container.innerHTML = `
+      <div class="metric-grid">
+        ${metricCard('New intakes', newCount)}
+        ${metricCard('Pending', pendingCount)}
+        ${metricCard('Active approved', approvedRecords.length)}
+        ${metricCard('Denied', deniedCount)}
+        ${metricCard('Concurrent in progress', concurrentCount)}
+        ${metricCard('Expiring ≤7 days', urgentCount, urgentCount ? 'urgent' : '')}
+      </div>
+
+      <div class="overview-section">
+        <h4>Expiring soon <span class="section-count">(${expiring.length})</span></h4>
+        <div class="alert-list">${alertRows}</div>
+      </div>
+    `;
+  }
+
   function renderContent() {
+    const exportBar = document.querySelector('.export-bar');
+
+    if (activeTab === 'overview') {
+      if (exportBar) exportBar.style.display = 'none';
+      renderOverview();
+      return;
+    }
+    if (exportBar) exportBar.style.display = 'flex';
+
     let list = records.filter(r => r.status === activeTab);
 
     if (activeTab === 'approved') {
