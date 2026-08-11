@@ -125,6 +125,11 @@
     font-size: 13px; cursor: help; vertical-align: middle;
   }
 
+  .doc-link {
+    color: var(--teal-dark); font-weight: 600; text-decoration: none;
+  }
+  .doc-link:hover { text-decoration: underline; }
+
   .manage-cell {
     text-align: right; font-family: 'IBM Plex Mono', monospace;
     font-size: 12px; font-weight: 600; color: var(--teal-dark);
@@ -563,6 +568,44 @@
     return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   }
 
+  // Derives a readable label from a storage path like
+  // "additional/1723300000000-treatment-plan.pdf" -> "treatment-plan.pdf"
+  function docFileName(path) {
+    const parts = String(path).split('/');
+    const last = parts[parts.length - 1] || path;
+    return last.replace(/^\d+-/, '');
+  }
+
+  function docLink(path) {
+    if (!path) return '—';
+    return `<a href="#" class="doc-link" onclick="openDocument('${path.replace(/'/g, "\\'")}'); return false;">View / Download</a>`;
+  }
+
+  function additionalDocsHtml(paths) {
+    if (!paths || !paths.length) return '';
+    const items = paths.map(p => `<div class="kv" style="margin-left:12px;">&bull; ${esc(docFileName(p))} — ${docLink(p)}</div>`).join('');
+    return `<div class="kv"><b>Additional documents:</b></div>${items}`;
+  }
+
+  async function openDocument(path) {
+    const token = sessionStorage.getItem(TOKEN_KEY);
+    try {
+      const res = await fetch('/api/get-document-url', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-access-token': token },
+        body: JSON.stringify({ path }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        alert(data.error || 'Could not open document.');
+        return;
+      }
+      window.open(data.url, '_blank');
+    } catch (err) {
+      alert('Could not open document. Please try again.');
+    }
+  }
+
   function openDrawer(id) {
     const r = records.find(x => x.id === id);
     if (!r) return;
@@ -583,8 +626,9 @@
           <div class="kv"><b>Primary insurance:</b> ${esc(r.primary_insurance)}</div>
           ${r.secondary_insurance ? `<div class="kv"><b>Secondary insurance:</b> ${esc(r.secondary_insurance)}</div>` : ''}
           ${r.facility_notes ? `<div class="kv"><b>Facility notes:</b> ${esc(r.facility_notes)}</div>` : ''}
-          <div class="kv">Attestation: ${r.attestation_doc_url ? `on file` : '—'}</div>
-          <div class="kv">ASAM: ${r.asam_doc_url ? `on file` : '—'}</div>
+          <div class="kv">Attestation: ${docLink(r.attestation_doc_url)}</div>
+          <div class="kv">ASAM: ${docLink(r.asam_doc_url)}</div>
+          ${additionalDocsHtml(r.additional_docs_urls)}
         </div>
 
         <div class="drawer-section">
