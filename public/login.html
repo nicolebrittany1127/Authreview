@@ -4,34 +4,190 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AuthAlly — Sign in</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Georgia&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    body { font-family: system-ui, sans-serif; background:#f5f5f7; }
-    .box { max-width:360px; margin:80px auto; background:#fff; padding:32px;
-           border-radius:12px; box-shadow:0 2px 12px rgba(0,0,0,.08); }
-    h1 { font-size:20px; margin:0 0 20px; }
-    input { width:100%; padding:10px; margin-bottom:12px; border:1px solid #ccc;
-            border-radius:6px; box-sizing:border-box; }
-    button { width:100%; padding:10px; border:0; border-radius:6px;
-             background:#1a1a2e; color:#fff; font-size:15px; cursor:pointer; }
-    button:disabled { opacity:.6; cursor:default; }
-    .err { color:crimson; font-size:14px; margin-bottom:12px; min-height:18px; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Inter', system-ui, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #2a4a72 0%, #16233b 55%, #0d1826 100%);
+      display: flex;
+      flex-direction: column;
+    }
+    .topbar {
+      padding: 24px 40px;
+    }
+    .brand {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.01em;
+    }
+    .brand span { color: #7fb3e8; }
+    .brand-org {
+      display: inline-block;
+      margin-left: 10px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,0.25);
+      color: rgba(255,255,255,0.75);
+      vertical-align: middle;
+    }
+    .wrap {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .content {
+      display: flex;
+      align-items: center;
+      gap: 64px;
+      max-width: 900px;
+      width: 100%;
+    }
+    .intro { flex: 1; color: #fff; }
+    .eyebrow {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.85);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 20px;
+      padding: 6px 14px;
+      margin-bottom: 28px;
+    }
+    .intro h1 {
+      font-family: Georgia, serif;
+      font-weight: 400;
+      font-size: 42px;
+      line-height: 1.2;
+      margin: 0 0 18px;
+      letter-spacing: -0.01em;
+    }
+    .intro h1 { color: #9dc3ee; }
+    .intro h1 em {
+      font-style: italic;
+      color: #fff;
+    }
+    .intro p {
+      font-size: 15px;
+      color: rgba(255,255,255,0.75);
+      line-height: 1.7;
+      max-width: 380px;
+      margin: 0;
+    }
+    .card {
+      flex: 0 0 340px;
+      background: #fff;
+      border-radius: 16px;
+      padding: 36px 32px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+    }
+    .card h2 {
+      font-size: 19px;
+      font-weight: 700;
+      margin: 0 0 6px;
+      color: #16233b;
+    }
+    .card .sub {
+      font-size: 13px;
+      color: #6b7280;
+      margin: 0 0 22px;
+    }
+    .err {
+      color: #c0392b;
+      font-size: 13px;
+      margin-bottom: 12px;
+      min-height: 16px;
+    }
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 6px;
+    }
+    input {
+      width: 100%;
+      padding: 11px 13px;
+      margin-bottom: 16px;
+      border: 1px solid #d7dce3;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      box-sizing: border-box;
+      transition: border-color 0.15s;
+    }
+    input:focus {
+      outline: none;
+      border-color: #7fb3e8;
+      box-shadow: 0 0 0 3px rgba(127,179,232,0.25);
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      border: 0;
+      border-radius: 999px;
+      background: #16233b;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    button:hover { opacity: 0.9; }
+    button:disabled { opacity: 0.6; cursor: default; }
+    @media (max-width: 760px) {
+      .content { flex-direction: column; gap: 36px; }
+      .intro { text-align: center; }
+      .intro p { margin: 0 auto; }
+      .card { flex: 0 0 auto; width: 100%; max-width: 340px; }
+    }
   </style>
 </head>
 <body>
-  <div class="box">
-    <h1>AuthAlly — Sign in</h1>
-    <div class="err" id="err"></div>
-    <input type="email" id="email" placeholder="Email" autocomplete="username" />
-    <input type="password" id="password" placeholder="Password" autocomplete="current-password" />
-    <button id="btn">Sign in</button>
+  <div class="topbar">
+    <span class="brand">Auth<span>Ally</span></span>
+    <span class="brand-org">Maklar Products</span>
+  </div>
+
+  <div class="wrap">
+    <div class="content">
+      <div class="intro">
+        <span class="eyebrow">Behavioral Health Prior Authorization</span>
+        <h1>Welcome back.<br><em>Sign in</em> to continue.</h1>
+        <p>Review clinical documentation against payer-specific guidelines and medical necessity criteria before you submit.</p>
+      </div>
+
+      <div class="card">
+        <h2>Sign in</h2>
+        <p class="sub">Enter your credentials to access AuthAlly.</p>
+        <div class="err" id="err"></div>
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="you@company.com" autocomplete="username" />
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="••••••••" autocomplete="current-password" />
+        <button id="btn">Sign in</button>
+      </div>
+    </div>
   </div>
 
   <script>
     const SUPABASE_URL = 'https://bfxlalbdaesoegvyyffd.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_w9__fwjintmEx8VPmdYuLA_VqMxtMoo';
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
+    const authClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     const btn = document.getElementById('btn');
     const errEl = document.getElementById('err');
 
@@ -41,11 +197,11 @@
       btn.textContent = 'Signing in…';
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      const { error } = await authClient.auth.signInWithPassword({ email, password });
       btn.disabled = false;
       btn.textContent = 'Sign in';
       if (error) { errEl.textContent = error.message; return; }
-      window.location.href = '/';   // main app after login
+      window.location.href = '/';
     }
 
     btn.addEventListener('click', signIn);
