@@ -148,6 +148,14 @@
     font-family: 'Zilla Slab', serif; font-weight: 700; font-size: 32px; color: var(--ink);
   }
   .metric-value.urgent { color: var(--denied); }
+  .metric-clickable { cursor: pointer; }
+  .metric-clickable:hover { border-color: var(--teal); }
+
+  .virtual-back {
+    font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: var(--teal-dark);
+    cursor: pointer; margin-bottom: 14px; display: inline-block;
+  }
+  .virtual-back:hover { text-decoration: underline; }
 
   .overview-section h4 {
     font-family: 'IBM Plex Mono', monospace; font-size: 12px; text-transform: uppercase;
@@ -404,8 +412,8 @@
 
     const urgentCount = expiring.filter(r => r._days <= 7).length;
 
-    const metricCard = (label, value, tone) => `
-      <div class="metric-card">
+    const metricCard = (label, value, target, tone) => `
+      <div class="metric-card metric-clickable" onclick="setTab('${target}')">
         <div class="metric-label">${label}</div>
         <div class="metric-value ${tone || ''}">${value}</div>
       </div>`;
@@ -423,12 +431,12 @@
 
     container.innerHTML = `
       <div class="metric-grid">
-        ${metricCard('New intakes', newCount)}
-        ${metricCard('Pending', pendingCount)}
-        ${metricCard('Active approved', approvedRecords.length)}
-        ${metricCard('Denied', deniedCount)}
-        ${metricCard('Concurrent in progress', concurrentCount)}
-        ${metricCard('Expiring ≤7 days', urgentCount, urgentCount ? 'urgent' : '')}
+        ${metricCard('New intakes', newCount, 'new')}
+        ${metricCard('Pending', pendingCount, 'pending')}
+        ${metricCard('Active approved', approvedRecords.length, 'approved')}
+        ${metricCard('Denied', deniedCount, 'denied')}
+        ${metricCard('Concurrent in progress', concurrentCount, 'concurrent')}
+        ${metricCard('Expiring ≤7 days', urgentCount, 'expiring7', urgentCount ? 'urgent' : '')}
       </div>
 
       <div class="overview-section">
@@ -448,22 +456,36 @@
     }
     if (exportBar) exportBar.style.display = 'flex';
 
-    let list = records.filter(r => r.status === activeTab);
+    const isVirtual = activeTab === 'concurrent' || activeTab === 'expiring7';
+    let list;
 
-    if (activeTab === 'approved') {
-      list = list.slice().sort((a, b) => {
-        const da = a.auth_end_date ? new Date(a.auth_end_date) : Infinity;
-        const db = b.auth_end_date ? new Date(b.auth_end_date) : Infinity;
-        return da - db;
-      });
+    if (activeTab === 'concurrent') {
+      list = records.filter(r => r.review_type === 'concurrent')
+        .slice().sort((a, b) => new Date(b.submitted_at) - new Date(a.submitted_at));
+    } else if (activeTab === 'expiring7') {
+      list = records.filter(r => r.status === 'approved' && r.auth_end_date && daysUntil(r.auth_end_date) <= 7)
+        .slice().sort((a, b) => new Date(a.auth_end_date) - new Date(b.auth_end_date));
     } else {
-      list = list.slice().sort((a, b) => new Date(b.submitted_at) - new Date(a.submitted_at));
+      list = records.filter(r => r.status === activeTab);
+      if (activeTab === 'approved') {
+        list = list.slice().sort((a, b) => {
+          const da = a.auth_end_date ? new Date(a.auth_end_date) : Infinity;
+          const db = b.auth_end_date ? new Date(b.auth_end_date) : Infinity;
+          return da - db;
+        });
+      } else {
+        list = list.slice().sort((a, b) => new Date(b.submitted_at) - new Date(a.submitted_at));
+      }
     }
 
     const container = document.getElementById('content');
 
+    const backLink = isVirtual
+      ? `<div class="virtual-back" onclick="setTab('overview')">&lsaquo; Back to overview</div>`
+      : '';
+
     if (!list.length) {
-      container.innerHTML = `<div class="empty">Nothing here right now.</div>`;
+      container.innerHTML = `${backLink}<div class="empty">Nothing here right now.</div>`;
       return;
     }
 
@@ -474,6 +496,10 @@
       cols = `<th>Client</th><th>Facility</th><th>Payer</th><th>Contacted</th><th>Biller</th><th></th>`;
     } else if (activeTab === 'approved') {
       cols = `<th>Client</th><th>Facility</th><th>Payer</th><th>Auth #</th><th>End date</th><th>Status</th><th>Biller</th><th></th>`;
+    } else if (activeTab === 'concurrent') {
+      cols = `<th>Client</th><th>Facility</th><th>Payer</th><th>Status</th><th>Biller</th><th></th>`;
+    } else if (activeTab === 'expiring7') {
+      cols = `<th>Client</th><th>Facility</th><th>Payer</th><th>Auth #</th><th>End date</th><th></th>`;
     } else {
       cols = `<th>Client</th><th>Facility</th><th>Payer</th><th>Reason</th><th>Biller</th><th></th>`;
     }
@@ -505,6 +531,22 @@
           <td class="manage-cell">Manage &rsaquo;</td>
         </tr>`;
       }
+      if (activeTab === 'concurrent') {
+        return `<tr class="row-clickable" onclick="openDrawer('${r.id}')">
+          <td>${nameCell(r)}</td><td>${esc(r.facility_name)}</td>
+          <td>${esc(r.payer)}</td><td style="text-transform:capitalize;">${esc(r.status)}</td>
+          <td>${esc(r.assigned_biller || '—')}</td>
+          <td class="manage-cell">Manage &rsaquo;</td>
+        </tr>`;
+      }
+      if (activeTab === 'expiring7') {
+        return `<tr class="row-clickable" onclick="openDrawer('${r.id}')">
+          <td>${nameCell(r)}</td><td>${esc(r.facility_name)}</td>
+          <td>${esc(r.payer)}</td><td>${esc(r.auth_number || '—')}</td>
+          <td>${esc(r.auth_end_date || '—')} ${expiryBadge(daysUntil(r.auth_end_date))}</td>
+          <td class="manage-cell">Manage &rsaquo;</td>
+        </tr>`;
+      }
       return `<tr class="row-clickable" onclick="openDrawer('${r.id}')">
         <td>${nameCell(r)}</td><td>${esc(r.facility_name)}</td>
         <td>${esc(r.payer)}</td><td>${esc(r.denial_reason || '—')}</td>
@@ -513,7 +555,7 @@
       </tr>`;
     }).join('');
 
-    container.innerHTML = `<table><thead><tr>${cols}</tr></thead><tbody>${rows}</tbody></table>`;
+    container.innerHTML = `${backLink}<table><thead><tr>${cols}</tr></thead><tbody>${rows}</tbody></table>`;
   }
 
   function esc(s) {
