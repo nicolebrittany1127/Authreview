@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>AUTH.REVIEW — Prior Authorization Platform</title>
+<title>AuthAlly — Prior Authorization Platform</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
 <style>
@@ -17,15 +17,20 @@
   --danger:#b91c1c;--danger-bg:#fee2e2;--danger-text:#7f1d1d;
   --info:#1d4ed8;--info-bg:#eff6ff;--info-text:#1e3a8a;
   --purple:#6d28d9;--purple-bg:#ede9fe;--purple-text:#4c1d95;
+  --brand-navy:#16233b;--brand-blue:#7fb3e8;--brand-blue-deep:#2a5a8f;--brand-blue-bg:#eaf2fb;
   --font:'IBM Plex Sans',sans-serif;--mono:'IBM Plex Mono',monospace;
   --radius:5px;--radius-lg:8px;
 }
 html{font-size:14px}
-body{font-family:var(--font);color:var(--ink);background:var(--surface2);min-height:100vh}
-.topnav{background:var(--surface);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:52px;position:sticky;top:0;z-index:100}
-.brand{font-family:var(--mono);font-size:14px;font-weight:500;letter-spacing:-.01em;color:var(--ink)}
-.brand span{color:var(--accent)}
+body{font-family:var(--font);color:var(--ink);background:var(--surface2);min-height:100vh;visibility:hidden}
+.topnav{background:var(--surface);border-bottom:1px solid var(--border);border-top:3px solid var(--brand-blue);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:52px;position:sticky;top:0;z-index:100}
+.brand{font-family:var(--mono);font-size:15px;font-weight:500;letter-spacing:-.01em;color:var(--ink);display:flex;align-items:center;gap:8px}
+.brand-mark{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:5px;background:var(--brand-navy);color:#fff;font-size:12px;font-weight:700}
+.brand-name span{color:var(--brand-blue-deep)}
+.brand-org{font-family:var(--mono);font-size:10px;padding:3px 8px;border-radius:3px;background:var(--brand-blue-bg);color:var(--brand-blue-deep);font-weight:500}
 .nav-badge{font-family:var(--mono);font-size:10px;padding:3px 8px;border-radius:3px;background:var(--accent-bg);color:var(--accent-text);font-weight:500}
+.signout-btn{font-family:var(--mono);font-size:11px;padding:5px 10px;border-radius:4px;border:1px solid var(--border);background:var(--surface);color:var(--ink3);cursor:pointer}
+.signout-btn:hover{background:var(--surface3);color:var(--ink)}
 .container{max-width:900px;margin:0 auto;padding:2rem 1.5rem}
 .mode-bar{display:flex;gap:2px;background:var(--surface3);border-radius:var(--radius-lg);padding:3px;margin-bottom:1.5rem;flex-wrap:wrap}
 .mode-tab{font-size:12px;font-family:var(--mono);padding:6px 14px;border-radius:var(--radius);cursor:pointer;color:var(--ink3);border:none;background:transparent;font-weight:400;transition:all .15s}
@@ -146,7 +151,7 @@ input[type="file"]{display:none}
 .parity-alert strong{font-weight:500;display:block;margin-bottom:3px;font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.04em}
 .hero{text-align:center;padding:3rem 1rem 2rem}
 .hero h1{font-size:28px;font-weight:300;color:var(--ink);margin-bottom:8px;letter-spacing:-.02em}
-.hero h1 strong{font-weight:500}
+.hero h1 strong{font-weight:500;color:var(--brand-blue-deep)}
 .hero p{font-size:13px;color:var(--ink3);max-width:480px;margin:0 auto 1.5rem;line-height:1.7}
 @media(max-width:640px){
   .container{padding:1rem}
@@ -158,17 +163,73 @@ input[type="file"]{display:none}
 </style>
 </head>
 <body>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  // --- Session gate: redirects to /login.html if not authenticated,
+  // and auto signs-out after 15 minutes of inactivity. ---
+  (function () {
+    const SUPABASE_URL = 'https://bfxlalbdaesoegvyyffd.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_w9__fwjintmEx8VPmdYuLA_VqMxtMoo';
+    const authClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const IDLE_LIMIT_MS = 15 * 60 * 1000;
+    let idleTimer;
+
+    function goToLogin() {
+      window.location.href = '/login.html';
+    }
+
+    function resetIdleTimer() {
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(async () => {
+        await authClient.auth.signOut();
+        goToLogin();
+      }, IDLE_LIMIT_MS);
+    }
+
+    async function guard() {
+      const { data: { session } } = await authClient.auth.getSession();
+      if (!session) {
+        goToLogin();
+        return;
+      }
+      document.body.style.visibility = 'visible';
+      resetIdleTimer();
+      ['click', 'keydown', 'mousemove', 'scroll'].forEach((evt) =>
+        window.addEventListener(evt, resetIdleTimer, { passive: true })
+      );
+      authClient.auth.onAuthStateChange((_event, newSession) => {
+        if (!newSession) goToLogin();
+      });
+      window.addEventListener('DOMContentLoaded', () => {
+        const btn = document.getElementById('signOutBtn');
+        if (btn) {
+          btn.addEventListener('click', async () => {
+            await authClient.auth.signOut();
+            goToLogin();
+          });
+        }
+      });
+    }
+
+    guard();
+  })();
+</script>
 <nav class="topnav">
-  <div class="brand">AUTH<span>.</span>REVIEW</div>
+  <div class="brand">
+    <span class="brand-mark">A</span>
+    <span class="brand-name">Auth<span>Ally</span></span>
+    <span class="brand-org">Maklar Products</span>
+  </div>
   <div style="display:flex;align-items:center;gap:12px">
     <span class="nav-badge">Beta</span>
     <span style="font-size:11px;font-family:var(--mono);color:var(--ink3)">Behavioral Health UR Platform</span>
+    <button class="signout-btn" id="signOutBtn">Sign out</button>
   </div>
 </nav>
 <div class="container">
   <div class="hero">
     <h1>Prior <strong>Authorization</strong> Review</h1>
-    <p>Analyze clinical documentation against ASAM and InterQual criteria across 29 payers in Florida, Maryland &amp; Virginia, 10 levels of care, and both MH and SUD frameworks.</p>
+    <p>AuthAlly reviews clinical documentation against payer-specific guidelines and medical necessity criteria across 29 payers in Florida, Maryland &amp; Virginia, 10 levels of care, and both MH and SUD frameworks.</p>
     <div class="mode-bar">
       <button class="mode-tab active" onclick="setMode('single',this)">Single Review</button>
       <button class="mode-tab" onclick="setMode('mhsud',this)">MH vs SUD</button>
@@ -329,10 +390,6 @@ const PAYERS={
   medicare_adv:{name:'Medicare Advantage',state:'FL',group:'Medicare',fw:'CMS baseline + plan-specific',sud_fw:'ASAM / CMS',mh_fw:'InterQual / CMS',notes:'Must meet CMS minimum criteria.',parity_note:'MA plans must meet CMS minimum parity requirements.'},
 
   // ================= MARYLAND =================
-  // HealthChoice Medicaid MCOs. Maryland carves mental health OUT of the MCO entirely — it is
-  // administered through the state's Public Behavioral Health System and reimbursed fee-for-service.
-  // Only SUD authorization runs through these MCOs (ASAM Criteria, per COMAR). VERIFY each plan's
-  // exact UM vendor/version with its current provider manual before relying on this clinically.
   aetna_md:{name:'Aetna Better Health of Maryland',state:'MD',group:'Medicaid Managed Care (HealthChoice)',fw:'ASAM Criteria (SUD only — MH carved out)',sud_fw:'ASAM Criteria',mh_fw:'N/A — carved out to MD Public Behavioral Health System (FFS)',mh_carveout:true,notes:'VERIFY plan-specific UM vendor/version. SUD authorization follows ASAM per COMAR; mental health is not authorized through this MCO.',parity_note:'Maryland carves mental health out of all HealthChoice MCOs; only SUD is authorized here.'},
   wellpoint_md:{name:'Wellpoint Maryland (formerly Amerigroup Community Care)',state:'MD',group:'Medicaid Managed Care (HealthChoice)',fw:'ASAM Criteria (SUD only — MH carved out)',sud_fw:'ASAM Criteria',mh_fw:'N/A — carved out to MD Public Behavioral Health System (FFS)',mh_carveout:true,notes:'VERIFY plan-specific UM vendor/version with current provider manual.',parity_note:'Maryland carves mental health out of all HealthChoice MCOs; only SUD is authorized here.'},
   carefirst_md:{name:'CareFirst Community Health Plan Maryland',state:'MD',group:'Medicaid Managed Care (HealthChoice)',fw:'ASAM Criteria (SUD only — MH carved out)',sud_fw:'ASAM Criteria',mh_fw:'N/A — carved out to MD Public Behavioral Health System (FFS)',mh_carveout:true,notes:'VERIFY plan-specific UM vendor/version with current provider manual.',parity_note:'Maryland carves mental health out of all HealthChoice MCOs; only SUD is authorized here.'},
@@ -343,9 +400,6 @@ const PAYERS={
   uhc_md:{name:'UnitedHealthcare Community Plan of Maryland',state:'MD',group:'Medicaid Managed Care (HealthChoice)',fw:'ASAM Criteria (SUD only — MH carved out)',sud_fw:'ASAM Criteria',mh_fw:'N/A — carved out to MD Public Behavioral Health System (FFS)',mh_carveout:true,notes:'VERIFY plan-specific UM vendor/version with current provider manual.',parity_note:'Maryland carves mental health out of all HealthChoice MCOs; only SUD is authorized here.'},
 
   // ================= VIRGINIA =================
-  // Cardinal Care Medicaid MCOs. Virginia's ARTS program state-mandates ASAM Criteria (3rd Edition)
-  // for SUD service authorization statewide, and MCOs administer MH and SUD together (no carve-out,
-  // unlike Maryland). VERIFY each plan's specific MH UM vendor with its current provider manual.
   aetna_va:{name:'Aetna Better Health of Virginia',state:'VA',group:'Medicaid Managed Care (Cardinal Care)',fw:'ASAM Criteria (ARTS — SUD) / MH criteria to verify',sud_fw:'ASAM Criteria (3rd Ed., ARTS Program)',mh_fw:'VERIFY — DMAS Mental Health Services criteria',notes:'Virginia\'s ARTS program mandates ASAM 3rd Edition for all SUD service authorizations statewide. MH is NOT carved out — confirm this plan\'s specific MH UM vendor.',parity_note:'Cardinal Care MCOs administer MH and SUD together, unlike Maryland.'},
   anthem_va:{name:'Anthem HealthKeepers Plus',state:'VA',group:'Medicaid Managed Care (Cardinal Care)',fw:'ASAM Criteria (ARTS — SUD) / MH criteria to verify',sud_fw:'ASAM Criteria (3rd Ed., ARTS Program)',mh_fw:'VERIFY — DMAS Mental Health Services criteria',notes:'Same statewide ASAM/ARTS mandate applies. Confirm this plan\'s specific MH UM vendor.',parity_note:'Cardinal Care MCOs administer MH and SUD together, unlike Maryland.'},
   humana_va:{name:'Humana Healthy Horizons in Virginia',state:'VA',group:'Medicaid Managed Care (Cardinal Care)',fw:'ASAM Criteria (ARTS — SUD) / MH criteria to verify',sud_fw:'ASAM Criteria (3rd Ed., ARTS Program)',mh_fw:'VERIFY — DMAS Mental Health Services criteria',notes:'Newest Cardinal Care MCO — replaced Molina effective July 2025. Confirm this plan\'s specific MH UM vendor.',parity_note:'Cardinal Care MCOs administer MH and SUD together, unlike Maryland.'},
@@ -380,14 +434,11 @@ function setMode(m,el){
   el.classList.add('active');
   ['single','mhsud','concurrent','batch'].forEach(x=>document.getElementById('mode-'+x).classList.toggle('active',x===m));
 }
-// Rescoped to their own payer-panel containers so the state-tab row (also .ptag) isn't touched.
 function sp(el){document.querySelectorAll('#payerPanelSingle .ptag').forEach(t=>t.classList.remove('sel'));el.classList.add('sel');selP=el.dataset.p}
 function sl(el){document.querySelectorAll('#mode-single .ltag').forEach(t=>t.classList.remove('sel'));el.classList.add('sel');selL=el.dataset.l}
 function sp2(el){document.querySelectorAll('#payerPanelConcurrent .ptag').forEach(t=>t.classList.remove('sel'));el.classList.add('sel');selP2=el.dataset.p2}
 function sl2(el){document.querySelectorAll('#concLocWrap .ltag').forEach(t=>t.classList.remove('sel'));el.classList.add('sel');selL2=el.dataset.l2}
 function spm(el){document.querySelectorAll('#payerPanelMHSUD .ptag').forEach(t=>t.classList.remove('sel'));el.classList.add('sel');selPM=el.dataset.pm}
-
-// ---- Dynamic payer rendering (state-aware) ----
 function renderPayerPanel(containerId,state,selectedKey,dataAttr,clickFn){
   const list=payersForState(state);
   const groups={};
@@ -670,7 +721,7 @@ function copyRem(id){
   navigator.clipboard.writeText(el.innerText||el.textContent).then(function(){const b=event.target;const o=b.textContent;b.textContent='Copied!';setTimeout(function(){b.textContent=o},2000)}).catch(function(){alert('Please select and copy manually.')});
 }
 function doExport(mode){
-  var lines=['AUTH.REVIEW — Prior Authorization Review Platform','Generated: '+new Date().toLocaleString(),''];
+  var lines=['AuthAlly — Prior Authorization Review Platform','Generated: '+new Date().toLocaleString(),''];
   if(mode==='single'&&window._sData){var r=window._sData;lines=lines.concat(buildReport(r.d,PAYERS[r.pKey]||PAYERS.sunshine,LOCS[r.lKey]||LOCS.php,'Single Document Review'))}
   else if(mode==='mhsud'&&window._mhData){
     var d=window._mhData;var p=PAYERS[window._mhPKey]||PAYERS.sunshine;
@@ -691,7 +742,7 @@ function doExport(mode){
   }
   else if(mode==='batch'&&window._bData){window._bData.forEach(function(r,i){if(r.data)lines=lines.concat(buildReport(r.data,PAYERS[r.pKey]||PAYERS.sunshine,LOCS[r.lKey]||LOCS.php,'Document '+(i+1)+': '+r.label));lines.push('');lines.push('='.repeat(60));lines.push('')})}
   else{alert('No results to export yet.');return}
-  openPrint('AUTH.REVIEW Report',lines.join('\n'));
+  openPrint('AuthAlly Report',lines.join('\n'));
 }
 function buildReport(d,p,l,heading){
   var lines=[heading,'='.repeat(60),'Payer: '+p.name,'LOC: '+l.label+' ('+l.asam+')','Framework: '+p.fw,'','SCORE: '+Math.round(d.auth_score)+'% — '+d.verdict_label,'','SUMMARY: '+d.summary,'','DIMENSIONS:'];
