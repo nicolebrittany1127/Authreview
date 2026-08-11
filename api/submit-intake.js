@@ -55,6 +55,9 @@ module.exports = async (req, res) => {
         facility_notes: body.facility_notes || null,
         attestation_doc_url: body.attestation_doc_url,
         asam_doc_url: body.asam_doc_url,
+        additional_docs_urls: Array.isArray(body.additional_docs_urls) && body.additional_docs_urls.length
+          ? body.additional_docs_urls
+          : null,
         status: 'new',
       },
     ])
