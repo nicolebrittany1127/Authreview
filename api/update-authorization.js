@@ -21,6 +21,8 @@ const EDITABLE_FIELDS = [
   'units_authorized',
   'denial_reason',
   'internal_notes',
+  'discharged_at',
+  'discharge_reason',
 ];
 
 module.exports = async (req, res) => {
