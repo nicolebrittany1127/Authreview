@@ -125,6 +125,12 @@
     font-size: 13px; cursor: help; vertical-align: middle;
   }
 
+  .manage-cell {
+    text-align: right; font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px; font-weight: 600; color: var(--teal-dark);
+    white-space: nowrap;
+  }
+
   /* ---- Drawer ---- */
   #overlay {
     display: none; position: fixed; inset: 0; background: rgba(27,43,52,0.35); z-index: 10;
@@ -366,13 +372,13 @@
 
     let cols;
     if (activeTab === 'new') {
-      cols = `<th>Client</th><th>Facility</th><th>LOC</th><th>Payer</th><th>Admitted</th><th>Biller</th>`;
+      cols = `<th>Client</th><th>Facility</th><th>LOC</th><th>Payer</th><th>Admitted</th><th>Biller</th><th></th>`;
     } else if (activeTab === 'pending') {
-      cols = `<th>Client</th><th>Facility</th><th>Payer</th><th>Contacted</th><th>Biller</th>`;
+      cols = `<th>Client</th><th>Facility</th><th>Payer</th><th>Contacted</th><th>Biller</th><th></th>`;
     } else if (activeTab === 'approved') {
-      cols = `<th>Client</th><th>Facility</th><th>Payer</th><th>Auth #</th><th>End date</th><th>Status</th><th>Biller</th>`;
+      cols = `<th>Client</th><th>Facility</th><th>Payer</th><th>Auth #</th><th>End date</th><th>Status</th><th>Biller</th><th></th>`;
     } else {
-      cols = `<th>Client</th><th>Facility</th><th>Payer</th><th>Reason</th><th>Biller</th>`;
+      cols = `<th>Client</th><th>Facility</th><th>Payer</th><th>Reason</th><th>Biller</th><th></th>`;
     }
 
     const rows = list.map(r => {
@@ -381,6 +387,7 @@
           <td>${nameCell(r)}</td><td>${esc(r.facility_name)}</td>
           <td>${esc(r.level_of_care)}</td><td>${esc(r.payer)}</td>
           <td>${esc(r.admission_date)}</td><td>${esc(r.assigned_biller || '—')}</td>
+          <td class="manage-cell">Manage &rsaquo;</td>
         </tr>`;
       }
       if (activeTab === 'pending') {
@@ -388,6 +395,7 @@
           <td>${nameCell(r)}</td><td>${esc(r.facility_name)}</td>
           <td>${esc(r.payer)}</td><td>${esc(r.payer_contact_date || '—')}</td>
           <td>${esc(r.assigned_biller || '—')}</td>
+          <td class="manage-cell">Manage &rsaquo;</td>
         </tr>`;
       }
       if (activeTab === 'approved') {
@@ -397,12 +405,14 @@
           <td>${esc(r.auth_end_date || '—')}</td>
           <td>${expiryBadge(daysUntil(r.auth_end_date))}</td>
           <td>${esc(r.assigned_biller || '—')}</td>
+          <td class="manage-cell">Manage &rsaquo;</td>
         </tr>`;
       }
       return `<tr class="row-clickable" onclick="openDrawer('${r.id}')">
         <td>${nameCell(r)}</td><td>${esc(r.facility_name)}</td>
         <td>${esc(r.payer)}</td><td>${esc(r.denial_reason || '—')}</td>
         <td>${esc(r.assigned_biller || '—')}</td>
+        <td class="manage-cell">Manage &rsaquo;</td>
       </tr>`;
     }).join('');
 
