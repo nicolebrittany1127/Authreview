@@ -1,26 +1,22 @@
 // GET /api/list-authorizations
-// Returns all authorization records for the biller dashboard.
-// Protected by a shared access token (see README) — swap for real
-// per-user auth later if this grows beyond one billing team.
+// Returns the authorization records this user is allowed to see, plus who
+// they are so the dashboard can render the right controls.
+//
+// Auth: per-user Supabase login (see api/_auth.js). Admins see every
+// record; billers see the ones assigned to them plus anything unclaimed,
+// so they can still pick up new intakes from the queue.
 
-const { createClient } = require('@supabase/supabase-js');
-
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_ROLE_KEY
-);
+const { admin, requireUser } = require('./_auth');
 
 module.exports = async (req, res) => {
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const token = req.headers['x-access-token'];
-  if (!process.env.DASHBOARD_ACCESS_TOKEN || token !== process.env.DASHBOARD_ACCESS_TOKEN) {
-    return res.status(401).json({ error: 'Unauthorized' });
-  }
+  const user = await requireUser(req, res);
+  if (!user) return;
 
-  const { data, error } = await supabase
+  const { data, error } = await admin
     .from('authorizations')
     .select('*')
     .order('submitted_at', { ascending: false });
@@ -30,5 +26,12 @@ module.exports = async (req, res) => {
     return res.status(500).json({ error: 'Could not load records.' });
   }
 
-  return res.status(200).json({ records: data });
+  const records = user.role === 'admin'
+    ? data
+    : data.filter(r => !r.assigned_biller_id || r.assigned_biller_id === user.id);
+
+  return res.status(200).json({
+    records,
+    user: { id: user.id, name: user.name, role: user.role },
+  });
 };
