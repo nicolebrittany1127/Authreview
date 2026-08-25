@@ -14,6 +14,8 @@
     --navy: #1a2433;
     --navy-hover: #0f1722;
     --border: #e2e0da;
+    --new-status: #2a5b8c;
+    --new-status-bg: #e3edf7;
     --pending: #b8860b;
     --pending-bg: #fdf3dd;
     --approved: #1f7a4d;
@@ -142,6 +144,7 @@
   tr.record-row:hover { background: #fafaf7; cursor: pointer; }
 
   .status-pill { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; text-transform: capitalize; }
+  .status-new { background: var(--new-status-bg); color: var(--new-status); }
   .status-pending { background: var(--pending-bg); color: var(--pending); }
   .status-approved { background: var(--approved-bg); color: var(--approved); }
   .status-denied { background: var(--denied-bg); color: var(--denied); }
@@ -222,6 +225,7 @@
     </div>
     <select id="status-filter">
       <option value="all">All statuses</option>
+      <option value="new">New</option>
       <option value="pending">Pending</option>
       <option value="approved">Approved</option>
       <option value="denied">Denied</option>
@@ -271,6 +275,7 @@
       <div class="field">
         <label>Status</label>
         <select id="f-status">
+          <option value="new">New</option>
           <option value="pending">Pending</option>
           <option value="approved">Approved</option>
           <option value="denied">Denied</option>
@@ -460,6 +465,7 @@
 
   function renderOverview() {
     const active = allRecords.filter(r => !r.discharged_at);
+    const newCount = active.filter(r => r.status === 'new').length;
     const pending = active.filter(r => r.status === 'pending').length;
     const approved = active.filter(r => r.status === 'approved').length;
     const denied = active.filter(r => r.status === 'denied').length;
@@ -469,6 +475,7 @@
     }).length;
 
     const cards = [
+      { key: 'new', label: 'New', num: newCount },
       { key: 'pending', label: 'Pending', num: pending },
       { key: 'approved', label: 'Approved', num: approved },
       { key: 'denied', label: 'Denied', num: denied },
