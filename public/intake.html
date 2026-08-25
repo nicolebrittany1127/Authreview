@@ -308,7 +308,7 @@
             <input type="file" id="additional_docs" accept=".pdf,.doc,.docx,image/*" multiple>
             <div class="file-name" id="additional_docs_names"></div>
           </div>
-          <p class="hint" style="margin-top:6px;">Treatment plans, clinical notes, prior authorizations \u2014 attach as many as needed.</p>
+          <p class="hint" style="margin-top:6px;">Treatment plans, clinical notes, prior authorizations — attach as many as needed.</p>
         </div>
       </fieldset>
 
@@ -340,7 +340,7 @@
   // Anon key is safe to expose client-side: the storage policy only
   // permits INSERT into intake-documents, nothing else.
   const SUPABASE_URL = "https://bfxlalbdaesoegvyyffd.supabase.co";
-  const SUPABASE_ANON_KEY = "sb_publishable_w9__fwjintmEx8VPmdYuLA_VqMxtMoo";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJmeGxhbGJkYWVzb2Vndnl5ZmZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0MTA5MzcsImV4cCI6MjA5Nzk4NjkzN30.1Ft2bvqOhfb6fPjTfYzuR7fspSJWzhM0L3_wQODxZN4";
   const BUCKET = "intake-documents";
 
   const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
