@@ -6,7 +6,6 @@
 <title>New Admission Intake</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root {
     --ink: #1B2B34;
@@ -336,15 +335,10 @@
 </div>
 
 <script>
-  // --- Configuration -------------------------------------------------
-  // Anon key is safe to expose client-side: the storage policy only
-  // permits INSERT into intake-documents, nothing else.
-  const SUPABASE_URL = "https://bfxlalbdaesoegvyyffd.supabase.co";
-  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJmeGxhbGJkYWVzb2Vndnl5ZmZkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI0MTA5MzcsImV4cCI6MjA5Nzk4NjkzN30.1Ft2bvqOhfb6fPjTfYzuR7fspSJWzhM0L3_wQODxZN4";
-  const BUCKET = "intake-documents";
-
-  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
+  // --- File uploads now go through /api/upload-intake-doc, which uses
+  // the Supabase SERVICE ROLE key server-side. The browser no longer
+  // talks to Supabase Storage directly at all, so there's no anon RLS
+  // policy on storage.objects/storage.buckets left to depend on.
   document.querySelectorAll('input[type=file]').forEach(inp => {
     inp.addEventListener('change', () => {
       if (inp.id === 'additional_docs') {
@@ -359,11 +353,33 @@
     });
   });
 
-  async function uploadDoc(file, prefix) {
-    const path = `${prefix}/${Date.now()}-${file.name}`;
-    const { error } = await supabaseClient.storage.from(BUCKET).upload(path, file);
-    if (error) throw error;
-    return path;
+  function readFileAsBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result.split(',')[1]);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function uploadDoc(file, folder) {
+    const base64Data = await readFileAsBase64(file);
+    const res = await fetch('/api/upload-intake-doc', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        filename: file.name,
+        contentType: file.type,
+        base64Data,
+        folder,
+      }),
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || 'Upload failed');
+    }
+    const data = await res.json();
+    return data.path;
   }
 
   const form = document.getElementById('intakeForm');
